@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="js/jwt-decode.js"></script>
+    <script>
+        //   google 帳號登入
+        function handleCredentialResponse(response) {
+            // decodeJwtResponse() is a custom function defined by you
+            // to decode the credential response.
+            const responsePayload = jwt_decode(response.credential);
+            // console.log("ID: " + responsePayload.sub);
+            // console.log('Full Name: ' + responsePayload.name);
+            // console.log('Given Name: ' + responsePayload.given_name);
+            // console.log('Family Name: ' + responsePayload.family_name);
+            // console.log("Image URL: " + responsePayload.picture);
+            console.log("Email: " + responsePayload.email);
+        }
+        // ajax 連 api 確認帳密
+        $(function () {
+            $("#login_ok_btn").bind("click", function () {
+                var jsonData = {};
+                jsonData["email_user"] = $("#email_user").val();
+                jsonData["password"] = $("#password").val();
+                console.log(JSON.stringify(jsonData));
+                $.ajax({
+                    type: "POST",
+                    url: "member_login_api.php",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata,
+                    error: function () {
+                        alert("error-movie_member_login_api.php");
+                    },
+                });
+            });
+        });
+        function showdata(data) {
+            console.log(data);
+            if (data.state) {
+                alert(data.message);
+                setCookie("UID", data.UID, 7);
+                location.href = "user_select.html";
+            } else {
+                alert(data.message);
+            }
+        }
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+    </script>
+</head>
+
+<body>
+    <script>
+
+        function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+            console.log('statusChangeCallback');
+            console.log(response);                   // The current login status of the person.
+            if (response.status === 'connected') {   // Logged into your webpage and Facebook.
+                testAPI();
+            } else {                                 // Not logged into your webpage or we are unable to tell.
+                document.getElementById('status').innerHTML = 'Please log ' +
+                    'into this webpage.';
+            }
+        }
+
+
+        function checkLoginState() {               // Called when a person is finished with the Login Button.
+            FB.getLoginStatus(function (response) {   // See the onlogin handler
+                statusChangeCallback(response);
+            });
+        }
+
+
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '727197878372103',
+                cookie: true,                     // Enable cookies to allow the server to access the session.
+                xfbml: true,                     // Parse social plugins on this webpage.
+                version: 'v14.0'           // Use this Graph API version for this call.
+            });
+
+
+            FB.getLoginStatus(function (response) {   // Called after the JS SDK has been initialized.
+                statusChangeCallback(response);        // Returns the login status.
+            });
+        };
+
+        function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me?fields=id,name,email', function (response) {
+                console.log('Successful login for: ' + response.name);
+                document.getElementById('status').innerHTML =
+                    'Thanks for logging in, ' + response.name + '!';
+                console.log(response);
+            });
+        }
+
+    </script>
+    <div id="status">
+    </div>
+    <div id="fb-root"></div>
+
+    <!-- Load the JS SDK asynchronously -->
+   
+
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v14.0&appId=461408512543153&autoLogAppEvents=1"
+        nonce="3AyxtLFT"></script>
+    <div data-role="page" id="home">
+        <div data-role="header" data-theme="b">
+            <h1>登入帳號</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <div data-role="fieldcontain">
+                <label for="email_user">帳號/信箱</label>
+                <input type="text" name="email_user" id="email_user" />
+            </div>
+            <div data-role="fieldcontain">
+                <label for="password">密碼</label>
+                <input type="password" name="password" id="password" />
+            </div>
+            <div class="ui-grid-a" data-type="vertical">
+                <div class="ui-block-a">
+                    <a href="#" data-role="button" data-theme="b" data-iconpos="left" data-icon="delete">
+                        取消
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="#" data-role="button" data-theme="b" data-iconpos="left" data-icon="check"
+                        id="login_ok_btn">確認
+                    </a>
+                </div>
+            </div>
+            <!-- Google帳號登入按鈕 -->
+            <div id="g_id_onload"
+                data-client_id="66115541244-mebg5tphpgqnd36rhr3d9s174d5eel5c.apps.googleusercontent.com"
+                data-login_uri="https://your.domain/your_login_endpoint" data-auto_prompt="false"
+                data-callback="handleCredentialResponse"></div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"
+                data-text="sign_in_with" data-width="400" data-shape="rectangular" data-logo_alignment="left"></div>
+            <div id="fb-root"></div>
+            <div class="fb-login-button" data-width="400" data-size="large" data-button-type="login_with"
+                data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"
+                scope="public_profile,email" onlogin="checkLoginState();"></div>
+            <div id="status">
+            </div>
+            <div data-role="footer" data-theme="b" data-position="fixed">
+
+                <h1>頁尾</h1>
+            </div>
+        </div>
+</body>
+
+</html>

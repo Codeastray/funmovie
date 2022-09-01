@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+        $(function () {
+            var flag_email_user = false;
+            var flag_password = false;
+            var flag_nickname = false;
+            var flag_re_password = false;
+            var how_pay;
+            $("#email_user").bind("input propertychange", function () {
+                if ($(this).val().length > 3 && $(this).val().length < 20) {
+                    var jsonData = {};
+                    // 確認是否創建的帳號重複
+                    jsonData["email_user"] = $(this).val();
+                    $.ajax({
+                        type: "POST",
+                        url: "member_check_uni_api.php",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: showdata_check_uni,
+                        error: function () {
+                            alert("error-movie_member_check_uni_api.php");
+                        }
+                    });
+                    $("#err_email_user").html("帳號符合規定");
+                    $("#err_email_user").css("color", "green");
+                    flag_email_user = true;
+                } else {
+                    $("#err_email_user").html("帳號格式不符合規定");
+                    $("#err_email_user").css("color", "red");
+                    flag_email_user = false;
+                }
+            });
+            //及時監聽password
+            $("#password").bind("input propertychange", function () {
+                if ($(this).val().length > 3 && $(this).val().length < 9) {
+                    $("#err_password").html("密碼格式符合規定");
+                    $("#err_password").css("color", "green");
+                    flag_password = true;
+                } else {
+                    $("#err_password").html("密碼格式不符合規定");
+                    $("#err_password").css("color", "red");
+                    flag_password = false;
+                }
+            });
+            //及時監聽re_password
+            $("#re_password").bind("input propertychange", function () {
+                if ($(this).val() == $("#password").val()) {
+                    $("#err_re_password").html("確認密碼格式符合規定");
+                    $("#err_re_password").css("color", "green");
+                    flag_re_password = true;
+                } else {
+                    $("#err_re_password").html("確認密碼不一致");
+                    $("#err_re_password").css("color", "red");
+                    flag_re_password = false;
+                }
+            });
+            //及時監聽nickname
+            $("#nickname").bind("input propertychange", function () {
+                if ($(this).val().length > 1 && $("#nickname").val().length < 9) {
+                    $("#err_nickname").html("暱稱符合規定");
+                    $("#err_nickname").css("color", "green");
+                    flag_nickname = true;
+                } else {
+                    $("#err_nickname").html("暱稱格式不符合規定");
+                    $("#err_nickname").css("color", "red");
+                    flag_nickname = false;
+                }
+            });
+            // 點選信用卡支付後，會傳剛剛填的所有資料至資料庫
+            $("#creditcard #reg_ok_btn").bind("click", function () {
+                if (
+                    flag_email_user &&
+                    flag_password &&
+                    flag_nickname &&
+                    flag_re_password
+                ) {
+                    // 將用戶填入的喜愛類別傳值至c_love (checkbox)
+                    var c_love = [];
+                    $.each($("input[name='love']:checked"), function () {
+                        c_love.push($(this).val());
+                    });
+                    // 將用戶填入的得知網站來源傳值至c_source (radio)
+                    var c_source;
+                    $.each($("input[name='source']:checked"), function () {
+                        c_source = $(this).val();
+                    });
+                       // 將用戶購入的方案傳值至c_level (radio)
+                    var c_level;
+                    $.each($("input[name='level']:checked"), function () {
+                        c_level = $(this).val();
+                    });
+                    console.log($("#email_user").val());
+                    console.log($("#password").val());
+                    console.log($("#nickname").val());
+                    console.log($("#area").val());
+                    console.log($("#phone").val());
+                    var jsonData = {};
+                    jsonData["email_user"] = $("#email_user").val();
+                    jsonData["password"] = $("#password").val();
+                    jsonData["nickname"] = $("#nickname").val();
+                    jsonData["birth"] = $("#birth").val();
+                    jsonData["sex"] = $("#sex").val();
+                    jsonData["love"] = c_love.join("/");
+                    jsonData["area"] = $("#area").val();
+                    jsonData["phone"] = $("#phone").val();
+                    jsonData["source"] = c_source;
+                    jsonData["level"] = c_level;
+                    jsonData["how_pay"] = how_pay;
+                    console.log(JSON.stringify(jsonData));
+                //    將輸入好的資料透過api匯入資料庫
+                    $.ajax({
+                        type: "POST",
+                        url: "member_C_api.php",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: showdata,
+                        error: function () {
+                            alert("error-movie_member_C_api.php");
+                        },
+                    });
+                } else {
+                    alert("欄位錯誤！");
+                }
+            });
+             // 點選行動支付後，會傳剛剛填的所有資料至資料庫
+            $("#phone_pay #reg_ok_btn").bind("click", function () {
+                if (
+                    flag_email_user &&
+                    flag_password &&
+                    flag_nickname &&
+                    flag_re_password
+                ) {
+                    var c_love = [];
+                    // 將用戶填入的喜愛類別傳值至c_love (checkbox)
+                    $.each($("input[name='love']:checked"), function () {
+                        c_love.push($(this).val());
+                    });
+                    // 將用戶填入的得知網站來源傳值至c_source (radio)
+                    var c_source;
+                    $.each($("input[name='source']:checked"), function () {
+                        c_source = $(this).val();
+                    });
+                     // 將用戶購入的方案傳值至c_level (radio)
+                    var c_level;
+                    $.each($("input[name='level']:checked"), function () {
+                        c_level = $(this).val();
+                    });
+                    console.log($("#email_user").val());
+                    console.log($("#password").val());
+                    console.log($("#nickname").val());
+                    console.log($("#area").val());
+                    console.log($("#phone").val());
+                    var jsonData = {};
+                    jsonData["email_user"] = $("#email_user").val();
+                    jsonData["password"] = $("#password").val();
+                    jsonData["nickname"] = $("#nickname").val();
+                    jsonData["birth"] = $("#birth").val();
+                    jsonData["sex"] = $("#sex").val();
+                    jsonData["love"] = c_love.join("/");
+                    jsonData["area"] = $("#area").val();
+                    jsonData["phone"] = $("#phone").val();
+                    jsonData["source"] = c_source;
+                    jsonData["level"] = c_level;
+                    jsonData["how_pay"] = how_pay;
+                    console.log(JSON.stringify(jsonData));
+ //    將輸入好的資料透過api匯入資料庫
+                    $.ajax({
+                        type: "POST",
+                        url: "member_C_api.php",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: showdata,
+                        error: function () {
+                            alert("error-movie_member_C_api.php");
+                        },
+                    });
+                } else {
+                    alert("欄位錯誤！");
+                }
+            });
+            // 監聽跳頁
+            $("#next_page1").bind("click", function () {
+                $.mobile.changePage("#next_profile", { transition: "slideup", changeHash: false });
+            });
+            // 監聽跳頁
+            $("#next_page2").bind("click", function () {
+                $.mobile.changePage("#next_level", { transition: "slideup", changeHash: false });
+            });
+            // 監聽信用卡支付跳頁
+            $("#credit_pay").bind("click", function () {
+                how_pay = "信用卡支付";
+                //console.log(how_pay);
+            });
+            // 監聽行動支付跳頁
+            $("#mobile_pay").bind("click", function () {
+                how_pay = "行動支付";
+                //console.log(how_pay );
+            });
+        });
+        function showdata(data) {
+            console.log(data);
+            if (data.state) {
+                alert(data.message);
+                location.href = "login.html";
+            } else {
+                alert(data.message);
+            }
+        }
+        function showdata_check_uni(data) {
+            if (data.state) {
+                $("#err_email_user").html("帳號格式符合規定，不存在，可以使用此帳號!");
+                $("#err_email_user").css("color", "green");
+                flag_email_user = true;
+            } else {
+                $("#err_email_user").html("帳號格式符合規定，存在，不可以使用此帳號!");
+                $("#err_email_user").css("color", "red");
+                flag_email_user = false;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div data-role="page" id="home">
+        <div data-role="header" data-theme="b">
+            <h1>會員註冊</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <div data-role="fieldcontain">
+                <label for="email_user">帳號</label>
+                <input type="text" name="email_user" id="email_user" />
+            </div>
+            <div id="err_email_user"></div>
+            <div data-role="fieldcontain">
+                <label for="password">密碼</label>
+                <input type="password" name="password" id="password" />
+            </div>
+            <div id="err_password"></div>
+            <div data-role="fieldcontain">
+                <label for="re_password">確認密碼</label>
+                <input type="password" name="re_password" id="re_password" />
+            </div>
+            <div id="err_re_password"></div>
+            <div data-role="fieldcontain">
+                <label for="nickname">暱稱</label>
+                <input type="text" name="nickname" id="nickname" />
+            </div>
+            <div id="err_nickname"></div>
+            <!-- 生日 -->
+            <div data-role="fieldcontain">
+                <label for="birth">生日</label>
+                <input type="date" name="birth" id="birth" />
+            </div>
+            <div data-role="fieldcontain">
+                <label for="sex">性別</label>
+                <select name="sex" id="sex" data-role="slider">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+        </div>
+        <a href="" data-role="button" data-theme="b" id="next_page1">Next</a>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h1>頁尾</h1>
+        </div>
+    </div>
+    <!-- 下一頁基本資料填寫 -->
+    <div data-role="page" id="next_profile">
+        <div data-role="header" data-theme="b">
+            <h2>其他資料填寫</h2>
+        </div>
+        <div role="main" class="ui-content">
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup" data-type="horizontal">
+                    <legend>喜愛影片類型</legend>
+                    <label for="love01">台灣</label>
+                    <input type="checkbox" name="love" id="love01" value="1" />
+                    <label for="love02">歐美</label>
+                    <input type="checkbox" name="love" id="love02" value="2" />
+                    <label for="love03">日韓</label>
+                    <input type="checkbox" name="love" id="love03" value="3" />
+                    <label for="love04">中國</label>
+                    <input type="checkbox" name="love" id="love04" value="4" />
+                </fieldset>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="area">居住縣市</label>
+                <select name="area" id="area">
+                    <option value="臺北市">臺北市</option>
+                    <option value="新北市">新北市</option>
+                    <option value="基隆市">基隆市</option>
+                    <option value="新竹市">新竹市</option>
+                    <option value="桃園市">桃園市</option>
+                    <option value="新竹縣">新竹縣</option>
+                    <option value="臺中市">臺中市</option>
+                    <option value="苗栗縣">苗栗縣</option>
+                    <option value="彰化縣">彰化縣</option>
+                    <option value="南投縣">南投縣</option>
+                    <option value="雲林縣">雲林縣</option>
+                    <option value="高雄市">高雄市</option>
+                    <option value="臺南市">臺南市</option>
+                    <option value="嘉義市">嘉義市</option>
+                    <option value="嘉義縣">嘉義縣</option>
+                    <option value="屏東縣">屏東縣</option>
+                    <option value="澎湖縣">澎湖縣</option>
+                    <option value="宜蘭縣">宜蘭縣</option>
+                    <option value="花蓮縣">花蓮縣</option>
+                    <option value="金門縣">金門縣</option>
+                    <option value="澎湖縣">澎湖縣</option>
+                    <option value="連江縣">連江縣</option>
+                </select>
+            </div>
+            <!-- 電話(設定10碼) -->
+            <div data-role="fieldcontain">
+                <label for="phone">手機號碼</label>
+                <input type="number" name="phone" id="phone" />
+            </div>
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup" data-type="horizontal">
+                    <legend>得知網站來源</legend>
+                    <label for="source01">親朋好友</label>
+                    <input type="radio" name="source" id="source01" value="親朋好友" />
+                    <label for="source02">網路搜尋</label>
+                    <input type="radio" name="source" id="source02" value="網路搜尋" />
+                    <label for="source03">社群媒體</label>
+                    <input type="radio" name="source" id="source03" value="社群媒體" />
+                    <label for="source04">電視</label>
+                    <input type="radio" name="source" id="source04" value="電視" />
+                    <a href="#other" data-rel="popup" data-role="button" data-position-to="window">其他</a>
+                </fieldset>
+                <div id="other" data-role="popup" data-dismissible="false">
+                    <a href="#next_profile" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext"
+                        class="ui-btn-right"></a>
+                    <label for="feedback">其他來源管道</label>
+                    <textarea name="feedback" id="feedback" cols="30 " rows="30"></textarea>
+                </div>
+            </div>
+        </div>
+        <a href="" data-role="button" data-theme="b" id="next_page2">Finish</a>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h2>頁尾</h2>
+        </div>
+    </div>
+    <!-- 下二頁基本資料填寫 -->
+    <div data-role="page" id="next_level" class="my-page">
+        <div data-role="header" data-theme="b">
+            <h2>訂購方案</h2>
+        </div>
+        <div role="main" class="ui-content">
+            <table data-role="table" class="ui-responsive table-stroke">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>一般會員</th>
+                        <th>黃金會員</th>
+                        <th>鑽石會員</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <tr>
+                        <td>解析度</td>
+                        <td>720P</td>
+                        <td>1080P</td>
+                        <td>4K</td>
+                    </tr>
+                    <tr>
+                        <td>成員數</td>
+                        <td>X</td>
+                        <td>2</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>月費</td>
+                        <td>199</td>
+                        <td>299</td>
+                        <td>399</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div data-role="fieldcontain">
+                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                    <input type="radio" name="level" value="0" id="level0">
+                                    <label for="level">選定</label>
+                                </fieldset>
+                            </div>
+                        </td>
+                        <td>
+                            <div data-role="fieldcontain">
+                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                    <input type="radio" name="level" value="1" id="level1">
+                                    <label for="level">選定</label>
+                                </fieldset>
+                            </div>
+                        </td>
+                        <td>
+                            <div data-role="fieldcontain">
+                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                    <input type="radio" name="level" value="2" id="level2">
+                                    <label for="level">選定</label>
+                                </fieldset>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <a href="#pay" data-role="button" data-theme="b" id="next_page2">Next</a>
+        </div>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h2>頁尾</h2>
+        </div>
+    </div>
+    <!-- 下三頁 -->
+    <div data-role="page" id="pay" class="my-page">
+        <div data-role="header" data-theme="b">
+            <h2>頁首</h2>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="ui-grid-a" data-type="vertical">
+                <div class="ui-block-a">
+                    <a href="#creditcard" data-role="button" data-theme="b" data-iconpos="bottom" id="credit_pay">
+                        <img src="https://blog.tripplus.cc/wp-content/uploads/2020/03/photo.php_.jpeg" alt=""
+                            width="95%" height="95%">
+                        <button>信用卡支付</button>
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="#phone_pay" data-role="button" data-theme="b" data-iconpos="bottom" id="mobile_pay"><img
+                            src="https://sw.cool3c.com/user/97626/2018/096c0cc8-4cce-4b0b-9c46-38b1741b9814.jpg?fit=max&w=1400&q=80"
+                            height="95%" width="95%" alt="">
+                        <button>行動支付</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h2>頁尾</h2>
+        </div>
+    </div>
+    <!-- 信用卡支付-->
+    <div data-role="page" id="creditcard" class="my-page">
+        <div data-role="header" data-theme="b">
+            <h2>信用卡</h2>
+        </div>
+        <div role="main" class="ui-content">
+            <div data-role="fieldcontain">
+                <label for="how_pay">姓</label>
+                <input type="text" name="how_pay" id="how_pay" />
+            </div>
+            <div data-role="fieldcontain">
+                <label for="how_pay">名</label>
+                <input type="text" name="how_pay" id="how_pay" />
+            </div>
+            <div data-role="fieldcontain">
+                <label for="how_pay">卡號</label>
+                <input type="text" name="how_pay" id="how_pay" />
+            </div>
+            <div data-role="fieldcontain">
+                <label for="how_pay">到期日</label>
+                <input type="text" name="how_pay" id="how_pay" />
+            </div>
+            <div data-role="fieldcontain">
+                <label for="how_pay">安全碼</label>
+                <input type="text" name="how_pay" id="how_pay" />
+            </div>
+        </div>
+        <div class="ui-grid-a">
+            <div class="ui-block-a">
+                <a href="" data-role="button" data-theme="b" data-icon="delete" id="cancel" align="center">返回</a>
+            </div>
+            <div class="ui-block-b" >
+                <a href="" data-role="button" data-theme="b" data-icon="check" id="reg_ok_btn" align="center">確定</a>
+            </div>
+        </div>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h2>頁尾</h2>
+        </div>
+    </div>
+    <!-- 行動支付-->
+    <div data-role="page" id="phone_pay" class="my-page">
+        <div data-role="header" data-theme="b">
+            <h2>頁首</h2>
+        </div>
+        <div role="main" class="ui-content">
+            <div data-role="fieldcontain">
+                <label for="phone_go">手機號碼</label>
+                <input type="number" name="phone_go" id="phone_go" />
+            </div>
+        </div>
+        <div class="ui-grid-a">
+            <div class="ui-block-a" >
+                <a href="" data-role="button" data-theme="b" data-icon="delete" id="cancel" align="center">返回</a>
+            </div>
+            <div class="ui-block-b">
+                <a href="" data-role="button" data-theme="b" data-icon="check" id="reg_ok_btn" align="center">確定</a>
+            </div>
+        </div>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h2>頁尾</h2>
+        </div>
+    </div>
+</body>
+</html>

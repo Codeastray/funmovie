@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Swiper demo</title>
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+    />
+    <!-- Link Swiper's CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"
+    />
+    <title>子帳號Homepage</title>
+    <script>
+        // UID確認，防止利用網址直接轉跳進來，每個網頁都要有
+        $(function () {
+            console.log(getCookie("UID"));
+            if (getCookie("UID") != "") {
+                var jsonData = {};
+                jsonData["UID"] = getCookie("UID");
+                console.log(jsonData);
+                $.ajax({
+                    type: "POST",
+                    url: "member_check_uid_api.php",
+                    //  async: false,
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata_check_uid,
+                    error: function () {
+                        alert("error-member_check_uid_api.php");
+                    },
+                });
+            } else {
+                location.href = "login.html";
+            }
+        });
+        function showdata(data) {
+            console.log(data);
+            // 渲染子帳號我的片單至下面的滑動格
+            for (var i = 0; i < data.data.length; i++) {
+                var strHTML = '<div class="swiper-slide"><img src="/images/cat1.avif" alt=""><div class="title" id="title_#">' + data.data[i].Moviename + '</div></div>';
+                $("#save").append(strHTML);
+            }
+        }
+        // 成功確認UID
+        function showdata_check_uid(data) {
+            if (data.state) {
+                console.log(data);
+                var jsonData = {};
+                jsonData["UID"] = getCookie("UID");
+                console.log(jsonData);
+                // ajax api 讀取子帳號我的片單
+                $.ajax({
+                    type: "GET",
+                    url: "all_R_api.php",
+                    async: false,
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata,
+                    error: function () {
+                        alert("error-all_R_api.php");
+                    },
+                });
+            } else {
+              // UID確認失敗強制轉跳至login.html
+                alert(data.message);
+                location.href = "login.html";
+            }
+            // 抓取後端資料的子帳號暱稱，渲染出來
+            $.ajax({
+                type: "GET",
+                url: "subuser_ID_for_homepage_api.php",
+                async: false,
+                data: JSON.stringify(jsonData),
+                dataType: "json",
+                success: showdata_sub_homepage,
+                error: function () {
+                    alert("error-subuser_ID_for_homepage_api.php");
+                },
+            });
+        }
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == " ") {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function showdata_sub_homepage(data) {
+            if (data.state) {
+                // alert(data.message);
+                console.log(data);
+                // for (var i = 0; i < data.data.length; i++) {
+                  //渲染子帳號暱稱
+                var strHTML = data.data.Nickname
+                $("#sub_name").html(strHTML);
+                // }
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+    <style>
+        html,
+        body {
+          position: relative;
+          height: 50%;
+        }
+        body {
+          background: #eee;
+          font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+          font-size: 14px;
+          color: #000;
+          margin: 0;
+          padding: 0;
+        }
+        .swiper {
+          width: 100%;
+          height: 100%;
+        }
+        .swiper-slide {
+          text-align: unset;
+          font-size: 18px;
+          background: #fff;
+          /* Center slide text vertically */
+        }
+        .swiper-slide img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      </style>
+</head>
+<body>
+    <h1 >子帳號Homepage</h1>
+    <!-- 將子帳號暱稱渲染至此 -->
+    <h1 id="sub_name"></h1>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <div id="carouselExampleInterval" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-interval="2000">
+            <img src="/images/landscape-01.avif" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item" data-interval="2000">
+            <img src="/images/landscape-02.avif" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="/images/landscape-03.avif" class="d-block w-100" alt="...">
+          </div>
+        </div>
+      </div>
+    <!-- Swiper -->
+    <div class="swiper mySwiper">
+        <h1>我的片單</h1>
+        <div class="swiper-wrapper" id="save">
+            <div class="swiper-slide">
+                <img src="/images/cat1.avif" alt="">
+                <div>片名</div>
+            </div>
+        </div>
+    </div>
+    <div class="swiper mySwiper">
+        <h1>影片類別(台灣)</h1>
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="/images/cat1.avif" alt="">
+            </div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div>
+            <div class="swiper-slide">Slide 4</div>
+            <div class="swiper-slide">Slide 5</div>
+            <div class="swiper-slide">Slide 6</div>
+            <div class="swiper-slide">Slide 7</div>
+            <div class="swiper-slide">Slide 8</div>
+            <div class="swiper-slide">Slide 9</div>
+        </div>
+    </div>
+    <div class="swiper mySwiper">
+        <h1>現正熱門</h1>
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">Slide 1</div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div>
+            <div class="swiper-slide">Slide 4</div>
+            <div class="swiper-slide">Slide 5</div>
+            <div class="swiper-slide">Slide 6</div>
+            <div class="swiper-slide">Slide 7</div>
+            <div class="swiper-slide">Slide 8</div>
+            <div class="swiper-slide">Slide 9</div>
+        </div>
+    </div>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <!-- Initialize Swiper -->
+    <script>
+      var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        breakpoints: {
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 10,
+          },
+          768: {
+            slidesPerView: 4,
+            spaceBetween: 10,
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 10,
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

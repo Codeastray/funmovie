@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+        // UID確認，防止利用網址直接轉跳進來，每個網頁都要有
+        $(function () {
+            console.log(getCookie("UID"));
+            if (getCookie("UID") != "") {
+                var jsonData = {};
+                jsonData["UID"] = getCookie("UID");
+                console.log(jsonData);
+                $.ajax({
+                    type: "POST",
+                    url: "member_check_uid_api.php",
+                    async: false,
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata_check_uid,
+                    error: function () {
+                        alert("error-member_check_uid_api.php");
+                    },
+                });
+            } else {
+                location.href = "login.html";
+            }
+        });
+        console.log(getCookie("UID"));
+        // UID確認成功後執行下面內容
+        function showdata_check_uid(data) {
+            //  抓取所有子帳號的暱稱
+            $.ajax({
+                type: "GET",
+                url: "profile_subuser_R_api.php",
+                async: false,
+                // data: JSON.stringify(jsonData),
+                dataType: "json",
+                success: showdata_subuser_R,
+                error: function () {
+                    alert("error-profile_subuser_R_api.php");
+                },
+            });
+            if (data.state) {
+                // 監聽新增成員轉跳頁面
+                $("#to_sub_user").bind("click", function () {
+                    $.mobile.changePage("#add_nickname", { transition: "slideup", changeHash: false });
+                });
+                // 在新增成員頁面中，輸入好暱稱，監聽新增按鈕，然後透過api新增子帳號進資料庫
+                $("#add_sub_user").bind("click", function () {
+                    var jsonData = {};
+                    jsonData["nickname"] = $("#create_sub_user").val();
+                    console.log(getCookie("UID"));
+                    console.log(jsonData);
+                    $.ajax({
+                        type: "POST",
+                        url: "profile_subuser_C_api.php",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: showdata,
+                        error: function () {
+                            alert("error-profile_subuser_C_api.php");
+                        }
+                    });
+                });
+            } else {
+                alert(data.message);
+                location.href = "login.html";
+            }
+        }
+        // 成員新增好後，跳回目前有哪些子成員的顯示頁面
+        function showdata(data) {
+            console.log(data);
+            if (data.state) {
+                alert(data.message);
+                location.href="user_select.html";
+            } else {
+                alert(data.message);
+            }
+        }
+        //渲染成員暱稱
+        function showdata_subuser_R(data) {
+            if (data.state) {
+                alert(data.message);
+                console.log(data);
+                for (var i = 0; i < data.data.length; i++) {
+                    var strHTML = '<p>' + data.data[i].Nickname + '</p>'
+                    $("#sub_list").append(strHTML);
+                    // $("#save").load(homepage.html);
+                }
+            } else {
+                alert(data.message);
+            }
+        }
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == " ") {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    </script>
+</head>
+<body>
+    <div data-role="page" id="home">
+        <div data-role="header" data-theme="b">
+            <h1>成員管理區</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <div id="sub_list">
+                <!-- 渲染成員 -->
+            </div>
+            <a href="" data-role="button" id="to_sub_user">新增</a>
+        </div>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h1>頁尾</h1>
+        </div>
+    </div>
+    <div data-role="page" id="add_nickname">
+        <div data-role="header" data-theme="b">
+            <h1>成員新增區</h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <div data-role="fieldcontain">
+                <label for="create_sub_user">暱稱</label>
+                <input type="text" name="create_sub_user" id="create_sub_user" />
+            </div>
+        </div>
+        <a href="" data-role="button" id="add_sub_user">新增</a>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h1>頁尾</h1>
+        </div>
+    </div>
+</body>
+</html>

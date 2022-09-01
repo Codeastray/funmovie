@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+        // UID確認，防止利用網址直接轉跳進來，每個網頁都要有
+        $(function () {
+            console.log(getCookie("UID"));
+            if ((getCookie("UID") != "")) {
+                var jsonData = {};
+                jsonData["UID"] = getCookie("UID");
+                console.log(jsonData);
+                $.ajax({
+                    type: "POST",
+                    url: "member_check_uid_api.php",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata_check_uid,
+                    error: function () {
+                        alert("error-member_check_uid_api.php");
+                    },
+                });
+            } else {
+                location.href = "login.html";
+            }
+        });
+        //    將主帳號暱稱傳至帳號選擇頁面
+        function showdata_check_uid(data) {
+            console.log(data);
+            console.log(JSON.stringify(data));
+            if (data.state) {
+                $("#nickname").html(data.data.Nickname);
+                alert(data.message);
+                // 監聽點擊主帳號會轉跳至首頁
+                $("#nickname").bind("click", function () {
+                    location.href = "homepage.html";
+                });
+                // 監聽點擊"+"號會轉跳至新增子帳號頁面(成員)
+                $("#to_user_check_password").bind("click", function () {
+                    location.href = "user_check_password.html";
+                });
+            } else {
+                alert(data.message);
+                location.href = "login.html";
+            }
+            //  抓取所有子帳號的暱稱
+            $.ajax({
+                type: "GET",
+                url: "profile_subuser_R_api.php",
+                async: false,
+                // data: JSON.stringify(jsonData),
+                dataType: "json",
+                success: showdata_subuser_R,
+                error: function () {
+                    alert("error-profile_subuser_R_api.php");
+                },
+            });
+        }
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == " ") {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        // 設立function強制轉跳特定網址
+
+        //渲染成員暱稱
+        function showdata_subuser_R(data) {
+            if (data.state) {
+                alert(data.message);
+                console.log(data);
+                var sub_ID = {};
+                for (var i = 0; i < data.data.length; i++) {
+                    //onclick = a() → 使用設立好的function強制轉跳特定網址
+                    var strHTML = '<h1><a href="#" onclick="a()" data-sub_user="' + data.data[i].Sub_User + '">' + data.data[i].Nickname + '</a></h1>'
+                    $("#sub_list").append(strHTML);
+                    // $("#save").load(homepage.html);
+                }
+            } else {
+                alert(data.message);
+            }
+            function a() {
+                location.href = "subuser_homepage.html";
+            }
+            $("a", $("#sub_list")).bind("click", function () {
+                console.log($(this).attr("data-sub_user"));
+                var jsonData = {};
+                jsonData["sub_id"] = $(this).attr("data-sub_user");
+                $.ajax({
+                    type: "POST",
+                    url: "subuser_ID_for_homepage_api.php",
+                    // async: false,
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata_sub_homepage,
+                    error: function () {
+                        alert("error-你知道錯嗎");
+                    },
+                });
+            });
+        }
+        function showdata_sub_homepage(data) {
+            if (data.state) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+    <style>
+        /* "+"號圖片的CSS */
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+        }
+
+        a:link {
+            text-decoration: rgb(199, 237, 30);
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div data-role="page" id="home" class="my-page">
+        <div data-role="header" data-theme="b">
+            <h2>選取使用者帳號</h2>
+        </div>
+        <div role="main" class="ui-content">
+            <a href="">
+                <h1 id="nickname"></h1>
+            </a>
+            <div id="sub_list">
+                <!-- 渲染成員 -->
+            </div>
+            <a href="" id="to_user_check_password">
+                <img src="/funmovie/images/arrow.png" alt="" width="10%">
+            </a>
+        </div>
+        <div data-role="footer" data-theme="b" data-position="fixed">
+            <h2>頁尾</h2>
+        </div>
+    </div>
+</body>
+
+</html>
