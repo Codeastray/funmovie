@@ -12,7 +12,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/vue@3"></script>
     <!-- Demo styles -->
+  
     <script>
 
         // UID確認，防止利用網址直接轉跳進來，每個網頁都要有
@@ -492,6 +494,7 @@
 </head>
 
 <body>
+    <script src="https://unpkg.com/vue@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -523,34 +526,10 @@
     </div>
     <!-- 點擊後跳出的影片播放視窗 使用bootstrap的modal 參考網址: https://getbootstrap.com/docs/4.6/components/modal/  
     modal視窗 主要和→→→→→連動→→→→→→→→  <a href=""><img src="/images/cat1.avif" alt="" data-toggle="modal" data-target="#myModal"></a>-->
-    <div class="container mt-3">
+    <div class="container mt-3" id="app">
         <!-- Modal -->
-        <div class="modal fade " id="myModal">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <!-- Modal header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="show_name"></h4>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <!-- modal中的內容，需要改的地方 -->
-                        <div class="embed-responsive embed-responsive-21by9">
-                            <!-- 到YouTube上在影片按滑鼠右鍵選複製崁入影片連結 得到以下程式碼-->
-                            <iframe width="1280" height="720" id="myMovie"
-                                src="https://www.youtube.com/embed/VNQedoh5XKE"
-                                title="[電影預告] Marvel Studios《奇異博士2: 失控多元宇宙》宣傳片 - Prove It (中文字幕)" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen></iframe>
-                        </div>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success">加入我的片單</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <popup></popup>
+        
     </div>
     <div class="swiper mySwiper" id="love1">
         <h1>影片類別(台灣)</h1>
@@ -614,7 +593,24 @@
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <!-- Initialize Swiper -->
+    <script>
+        
+        const app = Vue.createApp({
+            data() {
+                return {
 
+
+                }
+            },
+            methods: {
+
+            }
+
+        });
+
+        const mountedApp = app.mount("#app");
+    </script>
+    <script src="./components/popup.js"></script>
     <!-- 以下為影片渲染的呈現RWD的參數調整 -->
     <script>
         var swiper = new Swiper(".mySwiper", {
