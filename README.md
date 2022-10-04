@@ -1,6 +1,6 @@
 # funmovie
 樂電影
-<p>檔案內已有 sql 資料庫檔案</p>
+<p>檔案內已有 sql 資料庫檔案(funmovie.sql)</p>
 <p>管理員帳號:movie_user</p>
 <p>密碼:654654 </p>
 <p>資料表:funmoive</p>
