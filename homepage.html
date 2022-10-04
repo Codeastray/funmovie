@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>FUN MOVIE</title>
+	<!-- <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"> -->
+	<script src="js/jquery-2.1.0.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+		integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<!-- Link Swiper's CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+	<!-- Demo styles -->
+	<script src="https://unpkg.com/vue@3"></script>
+	<style>
+		@font-face {
+			font-family: 'GGeneral_Art';
+			src: url('fonts/General_Art.ttf') format('truetype');
+		}
+
+		.logo_box {
+			width: 40px;
+			height: 45px;
+			margin-bottom: 5mm;
+
+		}
+
+		.logo_box2 {
+			margin-left: 30mm;
+			margin-top: 1mm;
+		}
+
+		body .ui-content {
+			text-shadow: none;
+		}
+
+		html,
+		body {
+			position: relative;
+			height: 100%;
+		}
+
+		body {
+			background: #eee;
+			font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+			font-size: 14px;
+			color: #000;
+			margin: 0;
+			padding: 0;
+		}
+
+
+		.swiper {
+			width: 100%;
+			padding-top: 50px;
+			padding-bottom: 50px;
+		}
+
+		.swiper-slide {
+			background-position: center;
+			background-size: cover;
+			width: 300px;
+			height: 300px;
+		}
+
+		.swiper-slide img {
+			display: block;
+			width: 100%;
+		}
+
+		/*<!-- 現正熱門輪播輪播swiper styles -->*/
+		.swiper {
+			width: 100%;
+			height: 100%;
+		}
+
+		.swiper-slide {
+			text-align: center;
+			font-size: 18px;
+			background: #002;
+			/* Center slide text vertically */
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			-webkit-align-items: center;
+			align-items: center;
+		}
+
+		.swiper-slide img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	</style>
+</head>
+
+<body style="background-color: #002;" id="app">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+		crossorigin="anonymous"></script>
+
+	<!-- 最新消息互動視窗 -->
+	<div class="modal fade" id="news" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header flex-column align-items-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X
+					</button>
+					<h1 class="modal-title" id="myModalLabel">
+						<div class="bg-warning text-danger font-weight-bolder">最新消息</div>
+					</h1>
+				</div>
+				<div class="modal-body">
+					<div class="row flex-column align-items-center">
+						<div class="col-md-12">
+							<div class="box bg-danger">
+								<p class="display-4 text-center font-weight-bolder">會 員 大 優 惠</p>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="box bg-info">
+								<p class="display-4 text-center font-weight-bolder">院 線 搶 先 看</p>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="box bg-warning">
+								<p class="display-4 text-center font-weight-bolder">多 螢 幕 觀 賞</p>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="box bg-dark">
+								<p class="display-4 text-center font-weight-bolder">鑽 石 級 獨 享</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer flex-column align-items-center">
+					<h1>
+						<div class="text-danger font-weight-bolder">即刻加入 專屬會員</div>
+					</h1>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<!-- 下拉式選單:navbar -->
+	<nav class="navbar navbar-expand-md navbar-dark  font-weight-bolder fixed-top mb-5"
+		style="background-color: rgba(0, 0, 0, 0.5); height: 9%;">
+		<a class="navbar-brand text-danger m_font" href="#">
+			<img src="images/LOGO-01.png" alt="" class="logo_box">&nbsp;樂電影.MOVIE</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedCo ntent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<!-- <form class="form-inline my-2 my-lg-2">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success border-success my-2 my-sm-1" type="submit">Search</button>
+            </form> -->
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a class="nav-link text-primary m_font" href="#" onclick="all_U()">會員專區<span
+							class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white m_font" href="#" onclick="movie_save()">我的片單</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white m_font" href="#" onclick="movie_love()">影片類別</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-white m_font" href="#" data-toggle="modal" data-target="#news">最新消息</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-danger m_font" href="#" onclick="logoout()">帳號登出</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<!-- 頂部圖片輪播:swiper -->
+	<div class="container-fluid">
+		<div class="swiper hidden-xs py-5 mt-3 swiper-container1">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<img src="images/歐美/V怪客.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/歐美/天能.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/歐美/怪獸與鄧不利多的秘密.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/台灣/女鬼橋.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/台灣/月老.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/台灣/返校.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/台灣/海角七號.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/日韓/你的名字.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="images/日韓/劇場版 咒術迴戰 0.jpg" />
+				</div>
+			</div>
+			<div class="swiper-pagination swiper-p1"></div>
+		</div>
+	</div>
+	<div   class="card mb-6" style="max-width: 900px; background-color: black;" id="name">
+
+	</div>
+	<!-- Swiper -->
+	<div class="swiper mySwiper" id="save">
+		<img src="images/我的影片.png" alt="">
+		<div class="swiper-wrapper py-3" id="save_m" v-on:click="compare_moviename">
+			<!-- <div class="swiper-slide">
+                <a href=""><img src="/images/cat1.avif" alt="" data-toggle="modal" data-target="#myModal"></a>
+                <div>片名</div>
+            </div> -->
+		</div>
+	</div>
+	<!-- 點擊後跳出的影片播放視窗 使用bootstrap的modal 參考網址: https://getbootstrap.com/docs/4.6/components/modal/  
+    modal視窗 主要和→→→→→連動→→→→→→→→  <a href=""><img src="/images/cat1.avif" alt="" data-toggle="modal" data-target="#myModal"></a>-->
+	<div class="container mt-3">
+		<!-----------vue---------vue------- Modal 匯入modal.js中的template(版面設計)------------vue-------vue---------->
+		<modal :exist_or_not_moviename="exist_or_not_moviename"></modal>
+		<!---------vue----------vue-------- Modal 匯入modal.js中的template(版面設計)---------vue-----------vue--------->
+	</div>
+
+	<div class="swiper mySwiper " id="hot">
+		<img src="images/現正熱門.png" alt="">
+		<div class="swiper-wrapper py-3" id="hot_m" v-on:click="compare_moviename">
+			<!-- <div class="swiper-slide">
+                <a href="">
+                    <img src="images/L_03rabbit.avif"  alt=""data-toggle="modal"data-target="#myModal">
+                </a>
+                <div>片名</div>
+            </div> -->
+		</div>
+	</div>
+	<div class="swiper mySwiper" id="recent">
+		<img src="images/最近觀看.png" alt="" class="wow animate__pulse" data-wow-duration="0.8s"
+			data-wow-iteration="infinite">
+		<div class="swiper-wrapper py-3" id="recent_m" v-on:click="compare_moviename">
+			<!-- <div class="swiper-slide">
+                <a href="">
+                    <img src="images/L_03rabbit.avif"  alt=""data-toggle="modal"data-target="#myModal">
+                </a>
+                <div>片名</div>
+            </div> -->
+		</div>
+	</div>
+
+	<div class="swiper mySwiper" id="love1">
+		<img src="images/影片類別(台灣).png" alt="">
+		<div class="swiper-wrapper py-3" id="love_TW" v-on:click="compare_moviename">
+			<!-- <div class="swiper-slide">
+        <img src="/images/cat1.avif" alt="" data-toggle="modal" data-target="#myModal">
+        <div>片名</div> -->
+		</div>
+	</div>
+	<div class="swiper mySwiper" id="love2">
+		<img src="images/影片類別(歐美).png" alt="">
+		<div class="swiper-wrapper py-3" id="love_US" v-on:click="compare_moviename">
+			<!-- <div class="swiper-slide">
+        <img src="/images/cat1.avif" alt="" data-toggle="modal" data-target="#myModal">
+        <div>片名</div>
+      </div> -->
+		</div>
+	</div>
+	<div class="swiper mySwiper" id="love3">
+		<img src="images/影片類別(日韓).png" alt="">
+		<div class="swiper-wrapper py-3" id="love_JK" v-on:click="compare_moviename">
+			<!-- <div class="swiper-slide">
+        <img src="/images/cat1.avif" alt="" data-toggle="modal" data-target="#myModal">
+        <div>片名</div>
+      </div> -->
+		</div>
+	</div>
+	<div class="swiper mySwiper" id="love4">
+		<img src="images/影片類別(大陸).png" alt="">
+		<div class="swiper-wrapper py-3" id="love_CN" v-on:click="compare_moviename">
+			<!-- <div class="swiper-slide">
+        <img src="/images/cat1.avif" alt="" data-toggle="modal" data-target="#myModal">
+        <div>片名</div>
+      </div> -->
+		</div>
+	</div>
+
+	<!-- Swiper JS -->
+	<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="js/jquery-2.1.0.min.js"></script>
+	<link rel="stylesheet" href="css/allmystyle.css">
+	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script src="js/wow.min.js"></script>
+	<!-- Initialize Swiper -->
+	<!-- 以下為影片渲染的呈現RWD的參數調整 -->
+	<script>
+		//設兩個變數 一個用來存所有我的片單的片名 一個用來存點擊影片的片名
+		var saved_moviename = {};
+		var moviename_title;
+		// UID確認，防止利用網址直接轉跳進來，每個網頁都要有
+		$(function () {
+			console.log(getCookie("UID"));
+			if (getCookie("UID") != "") {
+				var jsonData = {};
+				jsonData["UID"] = getCookie("UID");
+				console.log(jsonData);
+				$.ajax({
+					type: "POST",
+					url: "member_check_uid_api.php",
+					//  async: false,
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_check_uid,
+					error: function () {
+						alert("error-member_check_uid_api.php");
+					},
+				});
+			} else {
+				location.href = "login.html";
+			}
+		});
+		function showdata(data) {
+			// 渲染主帳號的我的片單
+			if (data.data != undefined) {
+				for (var i = 0; i < data.data.length; i++) {
+					var strHTML = '<div class="swiper-slide sp bg-cover mx-3" style="background-image: url(images/' + data.data[i].Image + '); height: 300px;" id="count" data-moviename ="' + data.data[i].Moviename + '" data-toggle="modal"data-target="#myModal"><a href="#" ><div class="banner_text fixed-bottom" style="position: absolute;bottom:0px;text-center"><h3 class="t_radius">' + data.data[i].Moviename + '</h3></a></div></div>';
+					$("#save_m").append(strHTML);
+					// 將所有的我的片單片存入saved_moviename[i]
+					saved_moviename[i] = data.data[i].Moviename;
+					// $("#save").load(homepage.html);
+				}
+			} else {
+				// 如果新的主帳號登入，首頁沒有片單就要清空
+				$("#save").empty();
+			}
+			// 監聽個別影片被點擊後，計次傳入資料庫
+			$("#save_m #count").bind("click", function () {
+				// 點擊影片後，上方會渲染該部影片的名稱
+				$("#show_name").html($(this).data("moviename"));
+				console.log($(this).data("moviename"));
+				moviename_title = $(this).data("moviename");
+				var jsonData = {};
+				jsonData["moviename"] = $(this).data("moviename");
+				$.ajax({
+					type: "POST",
+					url: "hot_count_C_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_count,
+					error: function () {
+						alert("error-hot_count_C_api.php");
+					}
+				});
+				$.ajax({
+					type: "POST",
+					url: "recent_C_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_recent_C,
+					error: function () {
+						alert("error-recent_C_api.php");
+					}
+				});
+			});
+		}
+		// 成功確認UID
+		function showdata_check_uid(data) {
+			var wow = new WOW(
+				{
+					boxClass: 'wow',      // default
+					animateClass: 'animated', // default
+					offset: 0,          // default
+					mobile: true,       // default
+					live: true        // default
+				}
+			)
+			wow.init();
+			if (data.state) {
+				console.log(data);
+				var jsonData = {};
+				jsonData["UID"] = getCookie("UID");
+				console.log(jsonData);
+				// ajax api 讀取主帳號我的片單
+				$.ajax({
+					type: "GET",
+					url: "save_R_api.php",
+					async: false,
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata,
+					error: function () {
+						alert("error-save_R_api.php");
+					},
+				});
+				var Jsondata = {};
+				// 讀取主帳號使用者創建帳號時填入的基本資料中的喜愛類別影片
+				$.ajax({
+					type: "GET",
+					url: "love_R_api.php",
+					async: false,
+					// data: JSON.stringify(Jsondata),
+					dataType: "json",
+					success: showdata_love,
+					error: function () {
+						alert("error-love_R_api.php");
+						$(" #love1").empty();
+						$(" #love2").empty();
+						$(" #love3").empty();
+						$(" #love4").empty();
+					},
+				});
+				// 讀取熱門影片(資料庫中影片點擊數的前十名)
+				$.ajax({
+					type: "POST",
+					url: "hot_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_hot,
+					error: function () {
+						alert("error-hot_R_api.php");
+					}
+				});
+				$.ajax({
+					type: "GET",
+					url: "recent_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_recent_R,
+					error: function () {
+						alert("error-recent_R_api.php");
+					}
+				});
+				// 讀取帳號名稱、等級
+				$.ajax({
+					type: "POST",
+					url: "ID_for_homepage_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_name,
+					error: function () {
+						alert("error-ID_for_homepage_api.php");
+					}
+				});
+			} else {
+				alert(data.message);
+				location.href = "login.html";
+			}
+			function showdata_love(data) {
+				console.log(data);
+				console.log(data.data[0]); // 類別1:台灣
+				console.log(data.data[1]); // 類別2:歐美
+				console.log(data.data[2]); // 類別3:日韓
+				console.log(data.data[3]); // 類別4:大陸 
+				// console.log(data.data[1].length);
+				// console.log(data.data[1][0].Moviename);
+				// 抓取類別1:台灣的片單
+				if (data.data[0] != undefined) {  //如果傳來的不等於空(=有值)則渲染台灣類別片單
+					for (var i = 0; i < data.data[0].length; i++) {
+						var strHTML = '<div class="swiper-slide sp bg-cover mx-3" style="background-image: url(images/' + data.data[0][i].Image + '); height: 350px;" id="count" data-moviename ="' + data.data[0][i].Moviename + '" data-toggle="modal"data-target="#myModal"><a href="#" ><div class="banner_text fixed-bottom" style="position: absolute;bottom:0px;text-center"><h3 class="t_radius">' + data.data[0][i].Moviename + '</h3></a></div></div>';
+						$(" #love1 #love_TW").append(strHTML);
+					}
+				} else {
+					// 如果主帳號使用者一開始沒有選這個類別，就沒有片單，清空影片不顯示
+					$(" #love1").empty();
+				}
+				// 監聽台灣類別片單，點擊後計入次數近熱門影片欄位
+				$("#love1 #count").bind("click", function () {
+					$("#show_name").html($(this).data("moviename"));
+					console.log($(this).data("moviename"));
+					moviename_title = $(this).data("moviename");
+					var jsonData = {};
+					jsonData["moviename"] = $(this).data("moviename");
+					$.ajax({
+						type: "POST",
+						url: "hot_count_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_count,
+						error: function () {
+							alert("error-hot_count_C_api.php");
+						}
+					});
+					$.ajax({
+						type: "POST",
+						url: "recent_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_recent_C,
+						error: function () {
+							alert("error-recent_C_api.php");
+						}
+					});
+				});
+				if (data.data[1] != undefined) { //如果傳來的不等於空(=有值)則渲染歐美類別片單
+					for (var i = 0; i < data.data[1].length; i++) {
+						var strHTML = '<div class="swiper-slide sp bg-cover mx-3" style="background-image: url(images/' + data.data[1][i].Image + '); height: 350px;" id="count" data-moviename ="' + data.data[1][i].Moviename + '" data-toggle="modal"data-target="#myModal"><a href="#" ><div class="banner_text fixed-bottom" style="position: absolute;bottom:0px;text-center"><h3 class="t_radius">' + data.data[1][i].Moviename + '</h3></a></div></div>';
+						$(" #love2 #love_US").append(strHTML);
+					}
+				} else {
+					// 如果主帳號使用者一開始沒有選這個類別，就沒有片單，清空影片不顯示
+					$(" #love2").empty();
+				}
+				// 監聽歐美類別片單，點擊後計入次數近熱門影片欄位
+				$("#love2 #count").bind("click", function () {
+					$("#show_name").html($(this).data("moviename"));
+					console.log($(this).data("moviename"));
+					moviename_title = $(this).data("moviename");
+					var jsonData = {};
+					jsonData["moviename"] = $(this).data("moviename");
+					$.ajax({
+						type: "POST",
+						url: "hot_count_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_count,
+						error: function () {
+							alert("error-hot_count_C_api.php");
+						}
+					});
+					$.ajax({
+						type: "POST",
+						url: "recent_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_recent_C,
+						error: function () {
+							alert("error-recent_C_api.php");
+						}
+					});
+				});
+				if (data.data[2] != undefined) { //如果傳來的不等於空(=有值)則渲染日韓類別片單
+					for (var i = 0; i < data.data[2].length; i++) {
+						var strHTML = '<div class="swiper-slide sp bg-cover mx-3" style="background-image: url(images/' + data.data[2][i].Image + '); height: 350px;" id="count" data-moviename ="' + data.data[2][i].Moviename + '" data-toggle="modal"data-target="#myModal"><a href="#" ><div class="banner_text fixed-bottom" style="position: absolute;bottom:0px;text-center"><h3 class="t_radius">' + data.data[2][i].Moviename + '</h3></a></div></div>'; $(" #love3 #love_JK").append(strHTML);
+					}
+				} else {
+					// 如果主帳號使用者一開始沒有選這個類別，就沒有片單，清空影片不顯示
+					$(" #love3").empty();
+				}
+				// 監聽日韓類別片單，點擊後計入次數近熱門影片欄位
+				$("#love3 #count").bind("click", function () {
+					$("#show_name").html($(this).data("moviename"));
+					console.log($(this).data("moviename"));
+					moviename_title = $(this).data("moviename");
+					var jsonData = {};
+					jsonData["moviename"] = $(this).data("moviename");
+					$.ajax({
+						type: "POST",
+						url: "hot_count_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_count,
+						error: function () {
+							alert("error-hot_count_C_api.php");
+						}
+					});
+					$.ajax({
+						type: "POST",
+						url: "recent_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_recent_C,
+						error: function () {
+							alert("error-recent_C_api.php");
+						}
+					});
+				});
+				if (data.data[3] != undefined) { //如果傳來的不等於空(=有值)則渲染大陸類別片單
+					for (var i = 0; i < data.data[3].length; i++) {
+						var strHTML = '<div class="swiper-slide sp bg-cover mx-3" style="background-image: url(images/' + data.data[3][i].Image + '); height: 350px;" id="count" data-moviename ="' + data.data[3][i].Moviename + '" data-toggle="modal"data-target="#myModal"><a href="#" ><div class="banner_text fixed-bottom" style="position: absolute;bottom:0px;text-center"><h3 class="t_radius">' + data.data[3][i].Moviename + '</h3></a></div></div>'; $(" #love4 #love_CN").append(strHTML);
+					}
+				} else {
+					// 如果主帳號使用者一開始沒有選這個類別，就沒有片單，清空影片不顯示
+					$(" #love4").empty();
+				}
+				// 監聽大陸類別片單，點擊後計入次數近熱門影片欄位
+				$("#love4 #count").bind("click", function () {
+					$("#show_name").html($(this).data("moviename"));
+					console.log($(this).data("moviename"));
+					moviename_title = $(this).data("moviename");
+					var jsonData = {};
+					jsonData["moviename"] = $(this).data("moviename");
+					$.ajax({
+						type: "POST",
+						url: "hot_count_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_count,
+						error: function () {
+							alert("error-hot_count_C_api.php");
+						}
+					});
+					$.ajax({
+						type: "POST",
+						url: "recent_C_api.php",
+						data: JSON.stringify(jsonData),
+						dataType: "json",
+						success: showdata_recent_C,
+						error: function () {
+							alert("error-recent_C_api.php");
+						}
+					});
+				});
+			}
+			// 渲染熱門影片片單
+			function showdata_hot(data) {
+				console.log(data);
+				if (data.state) {
+					// alert(data.message);
+					if (data.data != undefined) { //如果傳來的不等於空(=有值)則渲染熱門類別片單
+						for (var i = 0; i < data.data.length; i++) {
+							var strHTML = '<div class="swiper-slide sp bg-cover mx-3" style="background-image: url(images/' + data.data[i].Image + '); height: 300px;" id="count" data-moviename ="' + data.data[i].Moviename + '" data-toggle="modal"data-target="#myModal"><a href="#" ><div class="banner_text fixed-bottom" style="position: absolute;bottom:0px;text-center"><h3 class="t_radius">' + data.data[i].Moviename + '</h3></a></div></div>';
+							$("#hot_m").append(strHTML);
+							// $("#save").load(homepage.html);
+						}
+					} else {
+						// 如果沒有人看片，沒有點擊，則熱門片單不顯示(是不可能啦!)
+						$(" #hot").empty();
+					}
+					// 監聽熱門片單，點擊後計入次數近熱門影片欄位
+					$("#hot #count").bind("click", function () {
+						$("#show_name").html($(this).data("moviename"));
+						console.log($(this).data("moviename"));
+						moviename_title = $(this).data("moviename");
+						var jsonData = {};
+						jsonData["moviename"] = $(this).data("moviename");
+						$.ajax({
+							type: "POST",
+							url: "hot_count_C_api.php",
+							data: JSON.stringify(jsonData),
+							dataType: "json",
+							success: showdata_count,
+							error: function () {
+								alert("error-hot_count_C_api");
+							}
+						});
+						$.ajax({
+							type: "POST",
+							url: "recent_C_api.php",
+							data: JSON.stringify(jsonData),
+							dataType: "json",
+							success: showdata_recent_C,
+							error: function () {
+								alert("error-recent_C_api.php");
+							}
+						});
+					});
+				} else {
+					alert(data.message);
+				}
+			}
+			// 此showdata_count的片結果顯示，由上面4個類別的showdata_count共用 ajax
+			function showdata_recent_R(data) {
+				if (data.state) {
+					// 	alert(data.message);
+					if (data.data != undefined) {//如果傳來的不等於空(=有值)則渲染最近觀賞片單
+						console.log(data);
+						for (var i = 0; i < data.data.length; i++) {
+							var strHTML = '<div class="swiper-slide sp bg-cover mx-3" style="background-image: url(images/' + data.data[i].Image + '); height: 300px;" id="count" data-moviename ="' + data.data[i].Moviename + '" data-toggle="modal"data-target="#myModal"><a href="#" ><div class="banner_text fixed-bottom" style="position: absolute;bottom:0px;text-center"><h3 class="t_radius">' + data.data[i].Moviename + '</h3></a></div></div>';
+							$("#recent #recent_m").append(strHTML);
+						}
+					} else {
+						// 如果沒有看片，沒有點擊，則最近觀賞片單不顯示(是不可能啦!)
+						$("#recent").empty();
+					}
+					// 監聽最近觀賞片單，點擊後作以下動作:
+					$("#recent #count").bind("click", function () {
+						$("#show_name").html($(this).data("moviename"));
+						// 將從後端傳來的片名，經由點擊後可以存入moviename_title的變數中
+						moviename_title = $(this).data("moviename");
+						console.log(moviename_title);
+						var jsonData = {};
+						jsonData["moviename"] = $(this).data("moviename");
+						$.ajax({
+							//在熱門片單中計次
+							type: "POST",
+							url: "hot_count_C_api.php",
+							data: JSON.stringify(jsonData),
+							dataType: "json",
+							success: showdata_count,
+							error: function () {
+								alert("error-hot_count_C_api");
+							}
+						});
+						//存進最近觀賞片單，成為時間排序為最新看過的影片
+						$.ajax({
+							type: "POST",
+							url: "recent_C_api.php",
+							data: JSON.stringify(jsonData),
+							dataType: "json",
+							success: showdata_recent_C,
+							error: function () {
+								alert("error-recent_C_api.php");
+							}
+						});
+					});
+				} else {
+					alert(data.message);
+				}
+			}
+		}
+		function showdata_count(data) {
+			console.log(data);
+			if (data.state) {
+				// alert(data.message);
+			} else {
+				alert(data.message);
+			}
+		}
+		function showdata_recent_C(data) {
+			console.log(data);
+			if (data.state) {
+				// alert(data.message);
+			} else {
+				alert(data.message);
+			}
+		}
+		function showdata_name(data) {
+			console.log(data);
+			$("#name").empty();
+			for (var i = 0; i < data.data.length; i++) {
+				if (data.data[i].Level == 0) {
+					var strHTML = '	<div class="row no-gutters"><div class="col-md-5 display-4 text-white text-center"><img src="images/today_audience.png" alt="">' + data.data[i].Nickname + '</div><div class="col-md-7 " ><div class="card-body bg-cover" style="background-image: url(images/level_normal.png); height:150px; background-size: auto 100%;background-repeat: no-repeat; "></div></div></div>'
+				} else if (data.data[i].Level == 1) {
+					var strHTML = '	<div class="row no-gutters"><div class="col-md-5 display-4 text-white text-center"><img src="images/today_audience.png" alt="">' + data.data[i].Nickname + '</div><div class="col-md-7 " ><div class="card-body bg-cover" style="background-image: url(images/level_gold.png); height:150px; background-size: auto 100%;background-repeat: no-repeat; "></div></div></div>';
+
+				} else if (data.data[i].Level == 2) {
+					var strHTML = '	<div class="row no-gutters"><div class="col-md-5 display-4 text-white text-center"><img src="images/today_audience.png" alt="">' + data.data[i].Nickname + '</div><div class="col-md-7 " ><div class="card-body bg-cover" style="background-image: url(images/level_diamond.png); height:150px; background-size: auto 100%;background-repeat: no-repeat; "></div></div></div>'
+				}
+			}
+			$("#name").append(strHTML);
+		}
+		function showdata_save_C_D(data) {
+			console.log(data);
+			if (data.state) {
+				// alert(data.message);
+			} else {
+				alert(data.message);
+			}
+		}
+
+		function getCookie(cname) {
+			let name = cname + "=";
+			let decodedCookie = decodeURIComponent(document.cookie);
+			let ca = decodedCookie.split(";");
+			for (let i = 0; i < ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) == " ") {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+		// function setCookie(cname, cvalue, exdays) {
+		//     const d = new Date();
+		//     d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+		//     let expires = "expires=" + d.toUTCString();
+		//     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		// }
+		// 監聽滑鼠游標點擊後影片自動撥放，以及滑鼠游標移到別處點籍後，影片視窗關閉+影片暫停撥放
+		function all_U() {
+			location.href = "all_U.html";
+		}
+		function logoout() {
+			location.href = "startpage.html";
+		}
+		function movie_love() {
+			location.href = "movie_love.html";
+		}
+		function movie_save() {
+			location.href = "movie_save.html";
+		}
+		$(function () {
+			var videoSrc = $("#myModal iframe").attr("src");
+			console.log(1);
+			// $('[data-toggle="modal"]').hover(function () {       ←滑鼠不點擊，滑動執行(hover)影片播放，但是有Bug 先停用
+			// var modalId = $(this).data('target');                ←滑鼠不點擊，滑動執行(hover)影片播放，但是有Bug 先停用
+			// $(modalId).modal('show');                            ←滑鼠不點擊，滑動執行(hover)影片播放，但是有Bug 先停用
+			$("#myModal").on('show.bs.modal', function () {
+				$("#myMovie").attr('src', videoSrc + "?autoplay=1");
+			});
+			// });                                                  ←滑鼠不點擊，滑動執行(hover)影片播放，但是有Bug 先停用
+			$('#myModal').on('hidden.bs.modal', function () { //滑鼠游標移到別處點籍後，影片視窗關閉+影片暫停撥放
+				$("#myModal iframe").attr("src", null);
+			})
+		});
+	</script>
+	<!-- --------------Vue---------Vue----------Vue modal.js ----------Vue------------Vue-------------->
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					exist_or_not_moviename: 0
+				}
+			},
+			methods: {
+				compare_moviename() {
+					// console.log(saved_moviename.find(moviename_title));
+					console.log(typeof (moviename_title));
+					console.log(typeof (saved_moviename))
+					console.log(moviename_title);
+					console.log(saved_moviename);
+					console.log(Object.values(saved_moviename));
+					console.log(Object.values(saved_moviename).includes(moviename_title));
+					if (Object.values(saved_moviename).includes(moviename_title)) {
+						this.exist_or_not_moviename = 1;
+					} else {
+						this.exist_or_not_moviename = 0;
+					}
+					console.log(this.exist_or_not_moviename);
+				}
+			},
+		});
+		console.log(saved_moviename);
+	</script>
+	<script src="./modal.js"></script>
+	<script>
+		const mountedApp = app.mount("#app");
+	</script>
+	<!-- --------------Vue---------Vue----------Vue modal.js ----------Vue------------Vue-------------->
+	<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+	<script>
+		var swiper = new Swiper('.swiper-container1', {
+			effect: "coverflow",
+			observeParents: true,
+			grabCursor: true,
+			initialSlides: 2,
+			slidesPerView: "auto",
+			autoplay: {
+				disableOnInteraction: false,
+				delay: 1500,
+			},
+			coverflowEffect: {
+				rotate: 50,
+				stretch: 0,
+				depth: 100,
+				modifier: 1,
+				slideShadows: true,
+			},
+			pagination: {
+				el: '.swiper-p1',
+			},
+		});
+		var swiper2 = new Swiper('.mySwiper', {
+			observeParents: true,
+			slidesPerView: 5,
+			// centeredSlides: true,
+			spaceBetween: 30,
+			grabCursor: true,
+			initialSlides: 2,   //置中從第幾張開始
+			// autoplay:{
+			//     disableOnInteraction:false,
+			//     delay:1500,
+			// },
+			pagination: {
+				el: '.swiper-p2',
+				clickable: true,
+			},
+			breakpoints: {
+				0: {
+					slidesPerView: 1,
+					spaceBetween: 20,
+				},
+				480: {
+					slidesPerView: 2,
+					spaceBetween: 20,
+				},
+				640: {
+					slidesPerView: 3,
+					spaceBetween: 20,
+				},
+				768: {
+					slidesPerView: 4,
+					spaceBetween: 40,
+				},
+				1024: {
+					slidesPerView: 5,
+					spaceBetween: 50,
+				},
+			},
+		});
+	</script>
+</body>
+
+</html>

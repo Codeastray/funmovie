@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/all.min.css">
+    <!-- <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"> -->
+    <style>
+        /* "+"號圖片的CSS */
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+        }
+
+        a:link {
+            text-decoration: rgb(199, 237, 30);
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+
+        .bg-success {
+            --bs-bg-opacity: 1;
+            background-color: rgba(var(--bs-success-rgb), var(--bs-bg-opacity)) !important;
+        }
+
+        h1 {
+            display: none;
+        }
+    </style>
+</head>
+
+<body style="background-color: #002;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand text-white " type="button" onclick="chang()">Funmovie</a>
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button> -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- <form class="form-inline my-2 my-lg-0">
+        </form> -->
+            <!-- <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">首頁 <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">關於我們</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">產品介紹</a>
+          </li>
+        </ul> -->
+        </div>
+    </nav>
+    <div>
+        <div class="container text-center mt-4">
+            <div class="row justify-content-center mt-4">
+                <figure class="figure col-md-4 col-xl-2 mt-4">
+                    <i class="text-primary fa-solid fa-user fa-8x py-5" id="nickname"></i>
+                    <figcaption class="figure-caption text-center text-white">
+                        <h2 id="nickname1">使用者名稱</h2>
+                    </figcaption>
+                </figure>
+                <div class="row col-12 justify-content-center" id="sub_list"></div>
+            </div>
+
+        </div>
+    </div>
+    <div class="footer">
+<div class="row text-white justify-content-center mt-5">
+        <!-- 增加成員的按鈕 -->
+        <a href="" id="to_user_check_password">
+            <i class="text-white fa-solid fa-regular fa-user-plus fa-6x"></i>
+            <!--<img src="images/+.png" class="figure-img img-fluid rounded  col-10 col-md-10 col-xl-6 py-2"-->
+            <!--    alt="...">-->
+        </a>
+    </div>
+    </div>
+    
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+        // UID確認，防止利用網址直接轉跳進來，每個網頁都要有
+        $(function () {
+            console.log(getCookie("UID"));
+            if ((getCookie("UID") != "")) {
+                var jsonData = {};
+                jsonData["UID"] = getCookie("UID");
+                console.log(jsonData);
+                $.ajax({
+                    type: "POST",
+                    url: "member_check_uid_api.php",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata_check_uid,
+                    error: function () {
+                        alert("error-member_check_uid_api.php");
+                    },
+                });
+            } else {
+                location.href = "login.html";
+            }
+        });
+        //    將主帳號暱稱傳至帳號選擇頁面
+        function showdata_check_uid(data) {
+            console.log(data);
+            console.log(JSON.stringify(data));
+            if (data.state) {
+                $("#nickname1").html(data.data.Nickname);
+                // alert(data.message);
+                // 監聽點擊主帳號會轉跳至首頁
+                $("#nickname1").bind("click", function () {
+                    location.href = "homepage.html";
+                });
+                $("#nickname").bind("click", function () {
+                    location.href = "homepage.html";
+                });
+                // 監聽點擊"+"號會轉跳至新增子帳號頁面(成員)
+                $("#to_user_check_password").bind("click", function () {
+                    location.href = "user_check_password.html";
+                });
+            } else {
+                alert(data.message);
+                location.href = "login.html";
+            }
+            //  抓取所有子帳號的暱稱
+            $.ajax({
+                type: "GET",
+                url: "profile_subuser_R_api.php",
+                async: false,
+                // data: JSON.stringify(jsonData),
+                dataType: "json",
+                success: showdata_subuser_R,
+                error: function () {
+                    alert("error-profile_subuser_R_api.php");
+                },
+            });
+        }
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == " ") {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        //渲染成員暱稱
+        function a() {
+            //location.href = "subuser_homepage.html";
+            location.href = "subuser_homepage.html"
+        }
+        function chang() {
+            // location.href = "startpage.html";
+        }
+        function showdata_subuser_R(data) {
+            if (data.state) {
+                // alert(data.message);
+                console.log(data);
+                var sub_ID = {};
+                for (var i = 0; i < data.data.length; i++) {
+                    //onclick = a() → 使用設立好的function強制轉跳特定網址 
+                    var strHTML =
+                        '<div style="transform: translateX(-40%);"><figure class="figure col-md-4 col-xl-2"><a data-ID="' + data.data[i].ID + '" data-sub_user="' + data.data[i].Sub_User + '"><i onclick="a()" class="text-secondary fa-solid fa-user fa-8x py-5 figure-img img-fluid"></i></a><figcaption class="figure-caption text-center text-white"><h2><a onclick="a()" data-ID="' + data.data[i].ID + '" data-sub_user="' + data.data[i].Sub_User + '" >' + data.data[i].Nickname + '</a></h2><div id="sub_list"></div></figcaption></figur'
+                    $("#sub_list").append(strHTML);
+                    // $("#save").load(homepage.html);
+                }
+                // 設立function強制轉跳特定網址
+            } else {
+                alert(data.message);
+            }
+            $("a", $("#sub_list")).bind("click", function () {
+                console.log($(this).attr("data-sub_user"));
+                console.log($(this).attr("data-ID"));
+                var jsonData = {};
+                jsonData["sub_id"] = $(this).attr("data-sub_user");
+                jsonData["ID"] = $(this).attr("data-ID");
+                $.ajax({
+                    type: "POST",
+                    url: "subuser_ID_for_homepage_api.php",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata_sub_homepage,
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    },
+                });
+            });
+        }
+        function showdata_sub_homepage(data) {
+            if (data.state) {
+                // alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+.bg-cover{
+background-position: center center;
+background-size:cover ;
+}
+@font-face {
+    font-family: 'GGeneral_Art';
+    src: url('fonts/General_Art.ttf') format('truetype');
+}
+
+.m_font {
+    font-size: 1.7em;
+    font-family: GGeneral_Art, serif;
+    font-weight: 400;
+    color: rgb(163, 4, 4);
+    text-align: center;
+}
+
+.sp {
+    font-size: 1.7em;
+    font-family: GGeneral_Art, serif;
+    font-weight: 400;
+    color: rgb(239, 80, 80);
+    box-shadow: 3px 3px 6px 3px rgba(255, 0, 0, 0.79);
+    text-align: center;
+    border-radius: 41px;
+    text-shadow: 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff, 0 0 1px #fff;
+    
+
+}
+
+.t_radius {
+    background: rgba(0, 0, 0, 0.5);
+    color: red;
+    font-weight: 500 !important;
+    font-size: 30px;
+    border-radius: 0px 0px 41px 41px;
+    margin-bottom: 0px;
+    
+}
+
+.sp:hover {
+    animation: pulse;
+    animation-duration: 0.5s; 
+}
+
+.box {
+    box-shadow: 3px 3px 6px 3px rgba(255, 0, 0, 0.79);
+    /* 水平置中 */
+    width: 19rem;
+    margin: 0 auto;
+}
+
+.box:hover {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}

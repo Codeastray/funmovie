@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>後臺管理 Table!</title>
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  </head>
+  <body>
+    <table
+           data-toggle="table"
+           data-sortable="true"                   //針對欄位進行排序
+           data-sort-class="table-active"         //排序的那欄以灰底來凸顯
+           data-pagination="true"                 //分頁
+           data-search="true"                     //搜尋列
+           data-show-toggle="true"                //切換檢視模式
+           class="table table-striped mt-5"
+    >
+      <thead>
+        <tr>
+          <th data-field="ID" data-sortable="true">ID</th>
+          <th data-field="Email_User">信箱/帳號</th>
+          <th data-field="Password" type="password">密碼</th>
+          <th data-field="Nickname">暱稱</th>
+          <th data-field="Birth" data-sortable="true">生日</th>
+          <th data-field="Sex" data-sortable="true">性別</th>
+          <th data-field="Love" data-sortable="true">喜愛類別</th>
+          <th data-field="Area" data-sortable="true">居住縣市</th>
+          <th data-field="Phone" data-sortable="true">電話</th>
+          <th data-field="Source" data-sortable="true">得知來源</th>
+          <th data-field="Level" data-sortable="true">會員等級</th>
+          <th data-field="How_Pay" data-sortable="true">支付方式</th>
+          <th data-field="Order_Time" data-sortable="true">購買時間</th>
+        </tr>
+      <tbody id="tablea">
+        <tr>
+          <th data-field="1">ID</th>
+          <th data-field="2">信箱/帳號</th>
+          <th data-field="3">密碼</th>
+          <th data-field="4">暱稱</th>
+          <th data-field="5">生日</th>
+          <th data-field="6">性別</th>
+          <th data-field="7">喜愛類別</th>
+          <th data-field="8">居住縣市</th>
+          <th data-field="9">電話</th>
+          <th data-field="10">得知來源</th>
+          <th data-field="11">會員等級</th>
+          <th data-field="12">支付方式</th>
+          <th data-field="13">購買時間</th>
+        </tr>
+      </tbody>
+      </thead>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+      $(function(){
+        var jsonData = {};
+        $.ajax({
+          type: "GET",
+          url: "table_R_api.php",
+          async: false,
+          data: JSON.stringify(jsonData),
+          dataType: "json",
+          success: showdata,
+          error: function () {
+              alert("error-table_R_api.php");
+          },
+        });
+      });
+      function showdata(data) {
+        console.log(data);
+        $("#tablea").empty();
+        for(var i=0; i<data.data.length;i++){
+          if(data.state){
+            var strHTML = '<tr><th data-field="1">'+data.data[i].ID+'</th><th data-field="2">'+data.data[i].Email_User+'</th><th data-field="3">'+data.data[i].Password+'</th><th data-field="4">'+data.data[i].Nickname+'</th><th data-field="5">'+data.data[i].Birth+'</th><th data-field="6">'+data.data[i].Sex+'</th><th data-field="7">'+data.data[i].Love+'</th><th data-field="8">'+data.data[i].Area+'</th><th data-field="9">'+data.data[i].Phone+'</th><th data-field="10">'+data.data[i].Source+'</th><th data-field="11">'+data.data[i].Level+'</th><th data-field="12">'+data.data[i].How_Pay+'</th><th data-field="13">'+data.data[i].Order_Time+'</th></tr>';
+            $("#tablea").append(strHTML);
+          }
+        }
+      }
+      $(function () {
+            $("#report").bind("click", function () {
+                location.href = "funmovie-report.html";
+            });
+      });
+    </script>
+  </body>
+</html>

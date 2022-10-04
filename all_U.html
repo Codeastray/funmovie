@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<script src="js/jquery-2.1.0.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+		integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="css/all.min.css">
+
+
+	<title>會員專區</title>
+	<style>
+		html,
+		body {
+			position: relative;
+			height: 100%;
+		}
+
+		* {
+			text-shadow: none !important;
+		}
+
+		body {
+			background: #eee;
+			font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+			font-size: 14px;
+			color: #000;
+			margin: 0;
+			padding: 0;
+		}
+
+		.aaa {
+			margin-top: 130px;
+		}
+	</style>
+</head>
+
+<body style="background-color: #002;">
+	<!-- 更新主頁 -->
+	<div class="container-fluid" style="position: relative;">
+			<div class="row">
+				<div class="col-md-3 text-center">
+					<a href="#"><img src="images/LOGO.jpg" onclick="backhome()" alt=""></a>
+				</div>
+				<div class="col-md-9">
+					<h1 class="col-12 text-center font-weight-bolder text-white pt-5">樂電影.MOVIE會員專區</h1>
+				</div>
+			</div>
+		</div>
+	<div data-role="page" id="updatehome" class="aaa" style="background-color: #002;">
+		<div class="row">
+			<div class="nav flex-column nav-pills col-3 ml-4" id="v-pills-tab" role="tablist"
+				aria-orientation="vertical">
+				<div class="text-center  mt-3 bg-white">
+					<h2 class="text-success font-weight-bolder mt-3">功能選項</h2>
+				</div>
+				<a class="nav-link text-center mt-3" href="#updateuser" id="user">
+					<h2 class="font-weight-bolder mt-3">修改資料</h2>
+				</a>
+				<a class="nav-link text-center mt-3" href="#updatepwd" id="pwd">
+					<h2 class="font-weight-bolder  mt-3">修改密碼</h2>
+				</a>
+				<a class="nav-link text-center mt-3" href="#sublist" id="subNicklist">
+					<h2 class="font-weight-bolder  mt-3">成員管理</h2>
+				</a>
+				<a class="nav-link text-center mt-3" href="#" id="to_user_check_password">
+					<h2 class="font-weight-bolder  mt-3">新增成員</h2>
+				</a>
+				<div class="table-dark">
+					<a class="nav-link text-center " onclick="logoout()" href="#">
+						<h2 class="font-weight-bolder  mt-3 text-danger ">帳號登出</h2>
+					</a>
+				</div>
+
+			</div>
+			<div class="col-sm-10 col-md-8">
+				<div role="main" class="ui-content text-white" style="font-size: 32px;">
+					<!-- 顯示資料 -->
+					<div class="card-columns" id="usertable">
+						<!-- <div class="card bg-warning">
+							<img class="card-img-top" src="images/城堡" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title font-weight-bolder text-danger text-center">居住地</h5>
+								<p class="card-text text-center">台中市</p>
+							</div>
+						</div>
+						<div class="card bg-warning">
+							<img class="card-img-top" src="images/性別" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title font-weight-bolder text-danger text-center">性別</h5>
+								<p class="card-text text-center">男/女/都可以</p>
+							</div>
+						</div>
+						<div class="card bg-success">
+							<img class="card-img-top" src="images/寶石" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title font-weight-bolder text-white text-center">會員等級</h5>
+								<p class="card-text text-center">有錢的是大爺</p>
+							</div>
+						</div>
+						<div class="card bg-primary">
+							<img class="card-img-top" src="images/頭像" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title font-weight-bolder text-center">暱稱:<span>老夫子</span></h5>
+								<h5 class="card-title font-weight-bolder text-white text-center">帳號:<span>你猜猜看!!</span></h5>
+							</div>
+						</div>
+						<div class="card  bg-success">
+							<img class="card-img-top" src="images/訂購" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title font-weight-bolder text-white text-center">訂購時間</h5>
+								<p class="card-text text-center">死要錢 訂閱一次是多久啊~~</p>
+							</div>
+						</div>
+						<div class="card bg-info">
+							<img class="card-img-top" src="images/生日" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title font-weight-bolder text-warning text-center">母難日</h5>
+								<p class="card-text text-center">19XX.08.08</p>
+							</div>
+						</div>
+						<div class="card bg-info">
+							<img class="card-img-top" src="images/電話" alt="Card image cap">
+							<div class="card-body">
+								<h5 class="card-title font-weight-bolder text-warning text-center">行動電話</h5>
+								<p class="card-text text-center">09XX-123456</p>
+							</div>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<!-- <div class="col-sm-1 col-md-3"></div> -->
+		</div>
+
+	</div>
+
+
+	<!-- 更新主帳密碼 -->
+	<div data-role="page" id="updatepwd" class="aaa" style="background-color: #002;">
+		<div class="row">
+			<div class="nav flex-column nav-pills col-3 ml-4" id="v-pills-tab" role="tablist"
+				aria-orientation="vertical">
+				<div class="text-center  mt-3 bg-white">
+					<h2 class="text-success font-weight-bolder mt-3">功能選項</h2>
+				</div>
+				<a class="nav-link text-center mt-3 " href="#updateuser" id="user">
+					<h2 class="font-weight-bolder mt-3">修改資料</h2>
+				</a>
+				<a class="nav-link text-center mt-3 active " href="#updatepwd" id="pwd">
+					<h2 class="font-weight-bolder  mt-3">修改密碼</h2>
+				</a>
+				<a class="nav-link text-center mt-3 " href="#sublist" id="subNicklist">
+					<h2 class="font-weight-bolder  mt-3">成員管理</h2>
+				</a>
+				<a class="nav-link text-center mt-3 " href="#sublist" id="to_user_check_password">
+					<h2 class="font-weight-bolder mt-3 ">新增成員</h2>
+				</a>
+				<div class="table-dark">
+					<a class="nav-link text-center " onclick="logoout()" href="#">
+						<h2 class="font-weight-bolder  mt-3 text-danger ">帳號登出</h2>
+					</a>
+				</div>
+			</div>
+			<div class="col-sm-10 col-md-6 text-white">
+				<div role="main" class="ui-content">
+					<div data-role="fieldcontain">
+						<label for="Email_Userp">信箱/帳號:</label>
+						<input type="text" name="Email_Userp" id="Email_Userp" placeholder="請輸入帳號" >
+					</div>
+					<div data-role="fieldcontain">
+						<label for="Passwordp">密碼:</label>
+						<input type="text" name="Passwordp" id="Passwordp" placeholder="請輸入密碼">
+					</div>
+
+					<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<a href="#" onclick="memberhome()" data-role="button" data-theme="b">取消</a>
+						</div>
+						<div class="ui-block-b">
+							<a href="#" data-role="button" data-theme="b" id="btn_pwdupdate">更新</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-1 col-md-3">
+			</div>
+		</div>
+
+	</div>
+
+	<!-- 更新主帳基本資料 -->
+	<div data-role="page" id="updateuser" class="aaa" style="background-color: #002;">
+		<div class="row">
+			<div class="nav flex-column nav-pills col-3 ml-4" id="v-pills-tab" role="tablist"
+				aria-orientation="vertical">
+				<div class="text-center  mt-3 bg-white">
+					<h2 class="text-success font-weight-bolder mt-3">功能選項</h2>
+				</div>
+				<a class="nav-link text-center mt-3 active " href="#updateuser" id="user">
+					<h2 class="font-weight-bolder mt-3">修改資料</h2>
+				</a>
+				<a class="nav-link text-center mt-3 " href="#updatepwd" id="pwd">
+					<h2 class="font-weight-bolder  mt-3">修改密碼</h2>
+				</a>
+				<a class="nav-link text-center mt-3 " href="#sublist" id="subNicklist">
+					<h2 class="font-weight-bolder  mt-3">成員管理</h2>
+				</a>
+				<a class="nav-link text-center mt-3 " href="#sublist" id="to_user_check_password">
+					<h2 class="font-weight-bolder  mt-3">新增成員</h2>
+				</a>
+				<div class="table-dark">
+					<a class="nav-link text-center " onclick="logoout()" href="#">
+						<h2 class="font-weight-bolder  mt-3 text-danger ">帳號登出</h2>
+					</a>
+				</div>
+			</div>
+			<div class="col-sm-10 col-md-6 text-white">
+				<div role="main" class="ui-content">
+					<div data-role="fieldcontain">
+						<label for="mNickname">暱稱:</label>
+						<input type="text" name="mNickname" id="mNickname" placeholder="請輸入暱稱">
+					</div>
+
+					<div data-role="fieldcontain">
+						<label for="Birth">生日:</label>
+						<input type="date" name="Birth" id="Birth">
+					</div>
+
+					<div data-role="fieldcontain">
+						<fieldset data-role="controlgroup" data-type="horizontal">
+							<legend>性別:</legend>
+							<input type="radio" name="Sex" id="Sex01" value="男">
+							<label for="Sex01">男</label>
+							<input type="radio" name="Sex" id="Sex02" value="女">
+							<label for="Sex02">女</label>
+						</fieldset>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="Area">居住縣市</label>
+						<select name="Area" id="Area">
+							<option value="臺北市">臺北市</option>
+							<option value="新北市">新北市</option>
+							<option value="基隆市">基隆市</option>
+							<option value="新竹市">新竹市</option>
+							<option value="桃園市">桃園市</option>
+							<option value="新竹縣">新竹縣</option>
+							<option value="臺中市">臺中市</option>
+							<option value="苗栗縣">苗栗縣</option>
+							<option value="彰化縣">彰化縣</option>
+							<option value="南投縣">南投縣</option>
+							<option value="雲林縣">雲林縣</option>
+							<option value="高雄市">高雄市</option>
+							<option value="臺南市">臺南市</option>
+							<option value="嘉義市">嘉義市</option>
+							<option value="嘉義縣">嘉義縣</option>
+							<option value="屏東縣">屏東縣</option>
+							<option value="澎湖縣">澎湖縣</option>
+							<option value="宜蘭縣">宜蘭縣</option>
+							<option value="花蓮縣">花蓮縣</option>
+							<option value="金門縣">金門縣</option>
+							<option value="澎湖縣">澎湖縣</option>
+							<option value="連江縣">連江縣</option>
+						</select>
+					</div>
+					<!-- <div data-role="fieldcontain">
+						<label for="Area">居住縣市:</label>
+						<select name="Area" id="Area">
+							<option value="基隆市">基隆市</option>
+							<option value="臺北市">臺北市</option>
+							<option value="桃園市">桃園市</option>
+							<option value="新竹市">新竹市</option>
+							<option value="苗栗市">苗栗市</option>
+							<option value="台中市">台中市</option>
+							<option value="彰化市">彰化市</option>
+							<option value="雲林市">雲林市</option>
+							<option value="嘉義市">嘉義市</option>
+							<option value="台南市">台南市</option>
+							<option value="高雄市">高雄市</option>
+							<option value="屏東市">屏東市</option>
+							<option value="宜蘭市">宜蘭市</option>
+							<option value="花蓮市">花蓮市</option>
+							<option value="台東市">台東市</option>
+							<option value="南投市">南投市</option>
+						</select>
+					</div> -->
+
+					<div data-role="fieldcontain">
+						<label for="Phone">電話:</label>
+						<input type="tel" name="Phone" id="Phone" placeholder="請輸入電話">
+					</div>
+
+					<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<a href="#" onclick="memberhome()" data-role="button" data-theme="b">取消</a>
+						</div>
+						<div class="ui-block-b">
+							<a href="#" data-role="button" data-theme="b" id="btn_update">更新</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-1 col-md-3">
+
+			</div>
+		</div>
+
+	</div>
+
+	<!-- 更改暱稱 -->
+	<div data-role="page" id="subNickname" class="aaa" style="background-color: #002;">
+		<div class="row">
+			<div class="nav flex-column nav-pills col-3 ml-4" id="v-pills-tab" role="tablist"
+				aria-orientation="vertical">
+				<div class="text-center  mt-3 bg-white">
+					<h2 class="text-success font-weight-bolder mt-3">功能選項</h2>
+				</div>
+				<a class="nav-link text-center mt-3 " href="#updateuser" id="user">
+					<h2 class="font-weight-bolder mt-3">修改資料</h2>
+				</a>
+				<a class="nav-link text-center mt-3  " href="#updatepwd" id="pwd">
+					<h2 class="font-weight-bolder  mt-3">修改密碼</h2>
+				</a>
+				<a class="nav-link text-center mt-3 active " href="#sublist" id="subNicklist">
+					<h2 class="font-weight-bolder  mt-3">成員管理</h2>
+				</a>
+				<a class="nav-link text-center mt-3 " href="#sublist" id="to_user_check_password">
+					<h2 class="font-weight-bolder mt-3 ">新增成員</h2>
+				</a>
+				<div class="table-dark">
+					<a class="nav-link text-center " onclick="logoout()" href="#">
+						<h2 class="font-weight-bolder  mt-3 text-danger ">帳號登出</h2>
+					</a>
+				</div>
+			</div>
+			<div class="col-sm-10 col-md-6">
+				<div role="main" class="ui-content">
+					<div data-role="fieldcontain" class="text-white">
+						<label for="Nicknamesub">暱稱:</label>
+						<input type="text" name="Nicknamesub" id="Nicknamesub" placeholder="請輸入暱稱">
+					</div>
+
+					<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<a href="#" onclick="memberhome()" data-role="button" data-theme="b">取消</a>
+						</div>
+						<div class="ui-block-b">
+							<a href="#" data-role="button" data-theme="b" id="btn_nameupdate">更新</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-1 col-md-3"></div>
+		</div>
+
+	</div>
+
+	<!-- 更新子帳選單 -->
+	<div data-role="page" id="sublist" class="aaa" style="background-color: #002;">
+		<div class="row">
+			<div class="nav flex-column nav-pills col-3 ml-4" id="v-pills-tab" role="tablist"
+				aria-orientation="vertical">
+				<div class="text-center  mt-3 bg-white">
+					<h2 class="text-success font-weight-bolder mt-3">功能選項</h2>
+				</div>
+				<a class="nav-link text-center mt-3 " href="#updateuser" id="user">
+					<h2 class="font-weight-bolder mt-3">修改資料</h2>
+				</a>
+				<a class="nav-link text-center mt-3  " href="#updatepwd" id="pwd">
+					<h2 class="font-weight-bolder  mt-3">修改密碼</h2>
+				</a>
+				<a class="nav-link text-center mt-3 active " href="#sublist" id="subNicklist">
+					<h2 class="font-weight-bolder  mt-3">成員管理</h2>
+				</a>
+				<a class="nav-link text-center mt-3 " href="#sublist" id="to_user_check_password">
+					<h2 class="font-weight-bolder mt-3 ">新增成員</h2>
+				</a>
+				<div class="table-dark">
+					<a class="nav-link text-center " onclick="logoout()" href="#">
+						<h2 class="font-weight-bolder  mt-3 text-danger ">帳號登出</h2>
+					</a>
+				</div>
+			</div>
+			<div class="col-sm-10 col-md-6">
+				<div role="main" class="ui-content">
+					<table data-role="table" class="ui-responsive table-stroke text-white justify-content-center"
+						style="font-size: 32px;">
+						<thead>
+							<tr>
+								<th>暱稱</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="Nicklist">
+							<tr class="row mx-5">
+								<td>無成員</td>
+								<td></td>
+							</tr>
+							</tboby>
+					</table>
+					<div>
+						<a href="#" onclick="memberhome()" data-role="button" data-theme="b">取消</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-1 col-md-3"></div>
+		</div>
+
+	</div>
+
+	<!-- Optional JavaScript; choose one of the two! -->
+
+	<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+	<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+		integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+		crossorigin="anonymous"></script>
+	<script src="js/jquery-2.1.0.min.js"></script>
+	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script>
+		var flag_Email = true;
+		var D_id; //for 更新使用
+		// UID確認，防止利用網址直接轉跳進來，每個網頁都要有
+		$(function () {
+			console.log(getCookie("UID"));
+			if (getCookie("UID") != "") {
+				var jsonData = {};
+				jsonData["UID"] = getCookie("UID");
+				console.log(jsonData);
+				$.ajax({
+					type: "POST",
+					url: "member_check_uid_api.php",
+					//  async: false,
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_check_uid,
+					error: function () {
+						alert("error-member_check_uid_api.php");
+					},
+				});
+			} else {
+				location.href = "login.html";
+			}
+		});
+		function showdata(data) {
+			console.log(data);
+			var jsonData = {};
+			jsonData["UID"] = getCookie("UID");
+			for (var i = 0; i < data.data.length; i++) {
+				if (data.state && getCookie("UID") == data.data[i].UID) {
+					var userLevel;
+					if (data.data[i].Level == 0) {
+						userLevel = "一般會員";
+					} else if (data.data[i].Level == 1) {
+						userLevel = "黃金會員";
+					} else if (data.data[i].Level == 2) {
+						userLevel = "鑽石會員";
+					}
+					// alert(data.message);
+					//<div data-role="fieldcontain"><label for="Email_User">帳號:</label><span>' + data.data[i].Email_User + '</span></div><div data-role="fieldcontain"><label for="Password">密碼:</label><span>' + data.data[i].Password + '</span></div><div data-role="fieldcontain"><label for="Password">暱稱:</label><span>' + data.data[i].Nickname + '</span></div><div data-role="fieldcontain"><label for="Birth">生日:</label><span>' + data.data[i].Birth + '</span></div><div data-role="fieldcontain"><label for="Sex">性別:</label><span>' + data.data[i].Sex + '</span></div><div data-role="fieldcontain"><label for="Area">居住縣市:</label><span>' + data.data[i].Area + '</span></div><div data-role="fieldcontain"><label for="Phone">手機:</label><span>' + data.data[i].Phone + '</span></div><div data-role="fieldcontain"><label for="Level">訂購方案:</label><span>' + userLevel + '</span></div><div data-role="fieldcontain"><label for="Order_Time">訂購日期:</label><span>' + data.data[i].Order_Time + '</span></div>
+					$("#usertable").empty();
+					var strHTML = '<div class="card text-center bg-secondary mb-4" ><i class="fa-solid fa-house-chimney fa-6x m-3"></i><div class="card-body my-3" style="background: #333;"><h5 class="card-title font-weight-bolder text-center">居住地</h5><p class="card-text font-weight-bolder text-primary text-center">' + data.data[i].Area + '</p></div></div><div class="card text-center bg-danger" ><i class="fa-solid fa-person-half-dress fa-6x m-3"></i><div class="card-body my-3" style="background: #333;"><h5 class="card-title font-weight-bolder text-center">性別</h5><p class="card-text text-primary font-weight-bolder text-center">' + data.data[i].Sex + '</p></div></div><div class="card bg-warning text-center"><i class="fa-solid fa-crown fa-2x m-3"></i><div class="card-body my-3" style="background: #333;"><h5 class="card-title font-weight-bolder text-white text-center">會員等級</h5><p class="card-text font-weight-bolder text-primary text-center" >' + userLevel + '</p></div></div><div class="card text-center bg-primary"><i class="fa-solid fa-user fa-4x m-3" ></i><div class="card-body my-3" style="background: #333;"><h5 class="card-title font-weight-bolder text-center">暱稱:<span class="text-primary">' + data.data[i].Nickname + '</span></h5><h5 class="card-title font-weight-bolder text-white text-center">帳號:<span class="text-primary">' + data.data[i].Email_User + '</span></h5></div></div><div class="card text-center bg-success"><i class="fa-solid fa-money-bill-transfer fa-2x"></i><div class="card-body my-3" style="background: #333;"><h5 class="card-title font-weight-bolder text-white text-center">訂購時間</h5><p class="card-text text-primary text-center">' + data.data[i].Order_Time + '</p></div></div><div class="card text-center bg-info mb-4"><i class="fa-solid fa-cake-candles fa-6x m-3"></i><div class="card-body my-3" style="background: #333;"><h5 class="card-title font-weight-bolder text-center">生日</h5><p class="card-text text-primary text-center">' + data.data[i].Birth + '</p></div></div><div class="card text-center bg-light"><i class="fa-solid fa-mobile-button text-secondary fa-6x m-3"></i><div class="card-body my-3" style="background: #333;"><h5 class="card-title font-weight-bolder text-center">行動電話</h5><p class="card-text text-primary text-center">' + data.data[i].Phone + '</p></div></div> ';
+
+					// 	var strHTML1='<a href="#updateuser" id="user" data-Nickname='+data.data[i].Nickname+' data-Sex='+data.data[i].Sex+' data-Area='+data.data[i].Area+' data-Brith='+data.data[i].Birth+' data-Phone='+data.data[i].Phone+'>修改資料</a>';
+					// 	$("#user").append(strHTML1);
+					$("#usertable").append(strHTML);
+
+				}
+			}
+			$("#user").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "User_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_user,
+					error: function () {
+						alert("error-User_R_api.php");
+					},
+				});
+				for (var i = 0; i < data.data.length; i++) {
+					if (data.state && getCookie("UID") == data.data[i].UID) {
+						$("#updateuser #mNickname").val(data.data[i].Nickname);
+						$("#updateuser #Birth").val(data.data[i].Birth);
+						if (data.data[i].Sex == "男") {
+							$('input[value=男]').prop('checked', true);
+						} else if (data.data[i].Sex == "女") {
+							$('input[value=女]').prop('checked', true);
+						}
+						// $("#updateuser #Sex").val(data.data[i].Sex);
+						$("#updateuser #Area").val(data.data[i].Area);
+						$("#updateuser #Phone").val(data.data[i].Phone);
+					}
+				}
+			});
+			$("#updatepwd #user").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "User_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_user,
+					error: function () {
+						alert("error-User_R_api.php");
+					},
+				});
+				for (var i = 0; i < data.data.length; i++) {
+					if (data.state && getCookie("UID") == data.data[i].UID) {
+						$("#updateuser #mNickname").val(data.data[i].Nickname);
+						$("#updateuser #Birth").val(data.data[i].Birth);
+						if (data.data[i].Sex == "男") {
+							$('input[value=男]').prop('checked', true);
+						} else if (data.data[i].Sex == "女") {
+							$('input[value=女]').prop('checked', true);
+						}
+						// $("#updateuser #Sex").val(data.data[i].Sex);
+						$("#updateuser #Area").val(data.data[i].Area);
+						$("#updateuser #Phone").val(data.data[i].Phone);
+					}
+				}
+			});
+			$("#sublist #user").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "User_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_user,
+					error: function () {
+						alert("error-User_R_api.php");
+					},
+				});
+				for (var i = 0; i < data.data.length; i++) {
+					if (data.state && getCookie("UID") == data.data[i].UID) {
+						$("#updateuser #mNickname").val(data.data[i].Nickname);
+						$("#updateuser #Birth").val(data.data[i].Birth);
+						if (data.data[i].Sex == "男") {
+							$('input[value=男]').prop('checked', true);
+						} else if (data.data[i].Sex == "女") {
+							$('input[value=女]').prop('checked', true);
+						}
+						// $("#updateuser #Sex").val(data.data[i].Sex);
+						$("#updateuser #Area").val(data.data[i].Area);
+						$("#updateuser #Phone").val(data.data[i].Phone);
+					}
+				}
+			});
+			$("#to_user_check_password").bind("click", function () {
+				location.href = "user_check_password.html";
+			});
+			$("#updateuser #to_user_check_password").bind("click", function () {
+				location.href = "user_check_password.html";
+			});
+			$("#updatepwd #to_user_check_password").bind("click", function () {
+				location.href = "user_check_password.html";
+			});
+			$("#sublist #to_user_check_password").bind("click", function () {
+				location.href = "user_check_password.html";
+			});
+			// passwordupdate
+			$("#pwd").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "User_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata,
+					error: function () {
+						alert("error-User_R_api.php");
+					},
+				});
+				for (var i = 0; i < data.data.length; i++) {
+					if (data.state && getCookie("UID") == data.data[i].UID) {
+						$("#updatepwd #Email_Userp").val(data.data[i].Email_User);
+						$("#updatepwd #Passwordp").val(data.data[i].Password);
+					}
+				}
+			});
+			$("#updateuser #pwd").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "User_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata,
+					error: function () {
+						alert("error-User_R_api.php");
+					},
+				});
+				for (var i = 0; i < data.data.length; i++) {
+					if (data.state && getCookie("UID") == data.data[i].UID) {
+						$("#updatepwd #Email_Userp").val(data.data[i].Email_User);
+						$("#updatepwd #Passwordp").val(data.data[i].Password);
+					}
+				}
+			});
+			$("#sublist #pwd").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "User_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata,
+					error: function () {
+						alert("error-User_R_api.php");
+					},
+				});
+				for (var i = 0; i < data.data.length; i++) {
+					if (data.state && getCookie("UID") == data.data[i].UID) {
+						$("#updatepwd #Email_Userp").val(data.data[i].Email_User);
+						$("#updatepwd #Passwordp").val(data.data[i].Password);
+					}
+				}
+			});
+			$("#btn_pwdupdate").bind("click", function () {
+				if (flag_Email) {
+					//將參數傳遞到後端 update api 執行更新行為
+					var jsonData_U = {};
+					jsonData_U["UID"] = getCookie("UID");
+					jsonData_U["Password"] = $("#Passwordp").val();
+
+					console.log(JSON.stringify(jsonData_U));
+
+					$.ajax({
+						type: "POST",
+						url: "password_U_api.php",
+						data: JSON.stringify(jsonData_U),
+						dataType: "json",
+						success: showdata_update,
+						error: function () {
+							alert("error-password_U_api.php");
+						}
+					});
+				} else {
+					alert("欄位錯誤, 請修正!");
+				}
+			});
+
+		}
+		function showdata_user(data) {
+			console.log(data);
+			if (data.state) {
+				// alert(data.message);
+				//btn_nameupdate 按鈕監聽
+				$("#btn_update").bind("click", function () {
+					if (flag_Email) {
+						//將參數傳遞到後端 update api 執行更新行為
+						var jsonData_U = {};
+						jsonData_U["UID"] = getCookie("UID");
+						jsonData_U["Nickname"] = $("#mNickname").val();
+						jsonData_U["Area"] = $("#Area").val();
+						jsonData_U["Sex"] = $('input[name="Sex"]:checked').val();
+						jsonData_U["Phone"] = $("#Phone").val();
+						jsonData_U["Birth"] = $("#Birth").val();
+
+						console.log(JSON.stringify(jsonData_U));
+
+						$.ajax({
+							type: "POST",
+							url: "Tprofile_U_api.php",
+							data: JSON.stringify(jsonData_U),
+							dataType: "json",
+							success: showdata_update,
+							error: function () {
+								alert("error-Tprofile_U_api.php");
+							}
+						});
+					} else {
+						alert("欄位錯誤, 請修正!");
+					}
+				});
+
+			} else {
+				// alert(data.message);
+			}
+		}
+		// 成功確認UID
+		function showdata_check_uid(data) {
+			if (data.state) {
+				console.log(data);
+				var jsonData = {};
+				jsonData["UID"] = getCookie("UID");
+				// ajax api 讀取a_user資料
+				$.ajax({
+					type: "GET",
+					url: "User_R_api.php",
+					async: false,
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata,
+					error: function () {
+						alert("error-User_R_api.php");
+					},
+				});
+				// ajax api 讀取b_user資料
+				$.ajax({
+					type: "GET",
+					url: "profile_subuser_R_api.php",
+					async: false,
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_subuser_R,
+					error: function () {
+						alert("error-profile_subuser_R_api.php");
+					},
+				});
+			} else {
+				// alert(data.message);
+				location.href = "login.html";
+			}
+		}
+		function showdata_subuser_R(data) {
+			$("#subNicklist").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "profile_subuser_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_sub_homepage,
+					error: function () {
+						alert("error-profile_subuser_R_api");
+					},
+				});
+			});
+			$("#updateuser #subNicklist").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "profile_subuser_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_sub_homepage,
+					error: function () {
+						alert("error-profile_subuser_R_api");
+					},
+				});
+			});
+			$("#updatepwd #subNicklist").bind("click", function () {
+				var jsonData = {};
+				$.ajax({
+					type: "POST",
+					url: "profile_subuser_R_api.php",
+					data: JSON.stringify(jsonData),
+					dataType: "json",
+					success: showdata_sub_homepage,
+					error: function () {
+						alert("error-profile_subuser_R_api");
+					},
+				});
+			});
+		};
+		function showdata_sub_homepage(data) {
+			console.log(data);
+			if (data.state) {
+				// alert(data.message);
+				$("#Nicklist").empty();
+				for (var k = 0; k < data.data.length; k++) {
+					var strHTML = '<tr><td>' + data.data[k].Nickname + '</td><td><button id="update_sub_btn" data-id="' + data.data[k].ID + '" data-nickname="' + data.data[k].Nickname + '" class="btn-primary mx-5">更新</button><button id="delete_sub_btn" data-id="' + data.data[k].ID + '" >刪除</button></td></tr>';
+					$("#Nicklist").append(strHTML);
+				}
+			} else {
+				// alert(data.message);
+			}
+			function showdata_del(data) {
+				console.log(data);
+ 
+				// alert(data.message);
+
+				location.href = "all_U.html";
+			}
+			//update_sub_nick
+			$("#sublist #update_sub_btn").bind("click", function () {
+				//轉換到更新頁面
+				$.mobile.changePage("#subNickname", { transition: "slideup", changeHash: false });
+
+				//更新頁面相關欄位
+				D_id = $(this).data("id");
+				$("#Nickname").val($(this).data("nickname"));
+			});
+			//btn_nameupdate 按鈕監聽
+			$("#btn_nameupdate").bind("click", function () {
+				if (flag_Email) {
+					//將參數傳遞到後端 update api 執行更新行為
+					var jsonData_U = {};
+					jsonData_U["ID"] = D_id;
+					jsonData_U["Nickname"] = $("#Nicknamesub").val();
+
+					console.log(JSON.stringify(jsonData_U));
+
+					$.ajax({
+						type: "POST",
+						url: "Tprofile_subuser_U_api.php",
+						data: JSON.stringify(jsonData_U),
+						dataType: "json",
+						success: showdata_nick_update,
+						error: function () {
+							alert("error-Tprofile_subuser_U_api.php");
+						}
+					});
+				} else {
+					alert("欄位錯誤, 請修正!");
+				}
+			});
+			//delete
+			$("#Nicklist #delete_sub_btn").bind("click", function () {
+				if (confirm("確定刪除 ID: " + $(this).data("id") + "?")) {
+					var jsonData_D = {};
+					jsonData_D["ID"] = $(this).data("id");
+					console.log(jsonData_D);
+					$.ajax({
+						type: "POST",
+						url: "profile_subuser_D_api.php",
+						data: JSON.stringify(jsonData_D),
+						dataType: "json",
+						// async: true,
+						success: showdata_del,
+						error: function () {
+							alert("error-profile_subuser_D_api.php");
+							location.href = "all_U.html";
+						}
+					});
+				}
+			});
+		}
+
+		function getCookie(cname) {
+			let name = cname + "=";
+			let decodedCookie = decodeURIComponent(document.cookie);
+			let ca = decodedCookie.split(";");
+			for (let i = 0; i < ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) == " ") {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+		function logoout() {
+			location.href = "startpage.html";
+		}
+		function backhome() {
+			location.href = "homepage.html";
+		}
+		function memberhome() {
+			location.href = "all_U.html";
+		}
+		function movie_love() {
+			location.href = "movie_love.html";
+		}
+		function showdata_nick_update(data) {
+			console.log(data);
+			if (data.state) {
+				// alert(data.message);
+				//重整畫面F5
+				location.href = "all_U.html";
+			} else {
+				// alert(data.message);
+			}
+		}
+		function showdata_update(data) {
+			console.log(data);
+			if (data.state) {
+				// alert(data.message);
+				//重整畫面F5
+				location.href = "all_U.html";
+			} else {
+				// alert(data.message);
+			}
+		}
+	</script>
+</body>
+
+</html>

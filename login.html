@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>登入</title>
+    <style>
+        .visa {
+            position: absolute;
+            width: 100%;
+            top: 20%;
+            left: 50%;
+            position: cover;
+            transform: translateX(-50%);
+        }
+
+        @media screen and (max-width: 991px) {
+            .visa {
+                top: 10%
+            }
+
+            .pay {
+                font-size: 48px;
+            }
+
+            .subpay {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var g_f_name;
+        var g_f_email;
+        var how_pay;
+        var c_level;
+        var jsonData = {};
+        //   google 帳號登入
+        function handleCredentialResponse(response) {
+            // decodeJwtResponse() is a custom function defined by you
+            // to decode the credential response.
+            const responsePayload = jwt_decode(response.credential);
+            // console.log("ID: " + responsePayload.sub);
+            console.log('Full Name: ' + responsePayload.name);
+            // console.log('Given Name: ' + responsePayload.given_name);
+            // console.log('Family Name: ' + responsePayload.family_name);
+            // console.log("Image URL: " + responsePayload.picture);
+            console.log("Email: " + responsePayload.email);
+            g_f_email = responsePayload.email;
+            g_f_name = responsePayload.name;
+            $(function () {
+
+                jsonData["email_user"] = g_f_email;
+                jsonData["password"] = "0";
+                console.log(JSON.stringify(jsonData));
+                $.ajax({
+                    type: "POST",
+                    url: "member_login_api.php",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata_google_fb_login,
+                    error: function () {
+                        alert("error-movie_member_login_api.php");
+                    }
+                });
+            });
+        }
+        function statusChangeCallback(response) {  // 呼叫函數確認登入狀態
+            console.log('statusChangeCallback');
+            console.log(response);                   // 顯示目前使用者登入狀態
+            if (response.status === 'connected') {   // 如果連線上了，登入網頁，也登入FB
+                testAPI();
+                // location.href = "https://funmoviex2022.000webhostapp.com/user_select.html"
+            } else {                                 // 如果沒連上線，轉跳網頁登入畫面
+                // document.getElementById('status').innerHTML = 'Please log ' +
+                //     'into this webpage.';
+                // location.href = "https://funmoviex2022.000webhostapp.com//login.html"
+            }
+        }
+        function checkLoginState() {               // 確認登入狀態
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        }
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1105455113683106',      // 上Meta for Deverloper 申請 App ID
+                cookie: true,
+                xfbml: true,
+                version: 'v14.0'           // 登入Meta for Deverloper去找API的版本
+            });
+            FB.getLoginStatus(function (response) {   // 初始化JS SDK後，再次確認登入狀態
+                statusChangeCallback(response);        // 返回登入狀態資料
+            });
+        };
+        function testAPI() {                      // 導出使用者資料
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me?fields=id,name,email', function (response) {
+                console.log('Successful login for: ' + response.name);
+                // document.getElementById('status').innerHTML =
+                //     'Thanks for logging in, ' + response.name + '!';
+                console.log(response);
+                g_f_email = response.email;
+                g_f_name = response.name;
+                $(function () {
+
+                    jsonData["email_user"] = response.email;
+                    jsonData["password"] = "0";
+                    console.log(JSON.stringify(jsonData));
+                    $.ajax({
+                        type: "POST",
+                        url: "member_login_api.php",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: showdata_google_fb_login,
+                        error: function () {
+                            alert("error-movie_member_login_api.php");
+                        }
+                    });
+                });
+            });
+        }
+        function showdata_google_fb_login(data) {
+            console.log(data);
+            if (data.state) {
+                // alert(data.message);
+                setCookie("UID", data.UID, 7);
+                // location.href = "https://funmoviex2022.000webhostapp.com/user_select.html";
+            } else {
+                alert(data.message);
+                $.mobile.changePage("#next_level", { transition: "slideup", changeHash: false });
+                $("#next_page2").bind("click", function () {
+                    $.mobile.changePage("#pay", { transition: "slideup", changeHash: false });
+                });
+                // 監聽信用卡支付跳頁
+                $("#credit_pay").bind("click", function () {
+                    how_pay = "信用卡支付";
+                    //console.log(how_pay);
+                });
+                // 監聽行動支付跳頁
+                $("#mobile_pay").bind("click", function () {
+                    how_pay = "行動支付";
+                    //console.log(how_pay );
+                });
+                $("#creditcard #reg_ok_btn").bind("click", function () {
+                    var c_level;
+                    $.each($("input[name='level']:checked"), function () {
+                        c_level = $(this).val();
+                    });
+
+                    console.log(c_level);
+                    jsonData["email_user"] = g_f_email;
+                    jsonData["password"] = "0";
+                    jsonData["nickname"] = g_f_name;
+                    jsonData["birth"] = "無";
+                    jsonData["sex"] = "無";
+                    jsonData["love"] = "無";
+                    jsonData["area"] = "無";
+                    jsonData["phone"] = "0";
+                    jsonData["source"] = "無";
+                    jsonData["level"] = c_level;
+                    jsonData["how_pay"] = how_pay;
+                    console.log(JSON.stringify(jsonData));
+                    //    將輸入好的資料透過api匯入資料庫
+                    $.ajax({
+                        type: "POST",
+                        url: "member_C_api.php",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: showdata_google_fb,
+                        error: function () {
+                            alert("error-movie_member_C_api.php");
+                        },
+                    });
+                });
+                $("#phone_pay #reg_ok_btn").bind("click", function () {
+                    $.each($("input[name='level']:checked"), function () {
+                        c_level = $(this).val();
+                    });
+
+                    console.log(c_level);
+                    jsonData["email_user"] = g_f_email;
+                    jsonData["password"] = "0";
+                    jsonData["nickname"] = g_f_name;
+                    jsonData["birth"] = "無";
+                    jsonData["sex"] = "無";
+                    jsonData["love"] = "無";
+                    jsonData["area"] = "無";
+                    jsonData["phone"] = "0";
+                    jsonData["source"] = "無";
+                    jsonData["level"] = c_level;
+                    jsonData["how_pay"] = how_pay;
+                    console.log(JSON.stringify(jsonData));
+                    //    將輸入好的資料透過api匯入資料庫
+                    $.ajax({
+                        type: "POST",
+                        url: "member_C_api.php",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: showdata_google_fb,
+                        error: function () {
+                            alert("error-movie_member_C_api.php");
+                        },
+                    });
+                });
+                function showdata_google_fb(data) {
+                    console.log(data);
+                    if (data.state) {
+
+                        jsonData["password"] = "0";
+                        console.log(JSON.stringify(jsonData));
+                        $.ajax({
+                            type: "POST",
+                            url: "member_login_api.php",
+                            data: JSON.stringify(jsonData),
+                            async: false,
+                            dataType: "json",
+                            success: showdata,
+                            error: function () {
+                                alert("error-movie_member_login_api.php");
+                            }
+                        });
+                        // alert(data.message);
+                        location.href = "user_select.html";
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            }
+        }
+    </script>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v14.0&appId=1105455113683106&autoLogAppEvents=1"
+        nonce="pg8mznI6"></script>
+    <div data-role="page" id="home" style="background-color: #002;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand text-white" type="button" onclick="chang()">Funmovie</a>
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button> -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- <form class="form-inline my-2 my-lg-0">
+            </form> -->
+                <!-- <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">首頁 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">關於我們</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">產品介紹</a>
+              </li>
+            </ul> -->
+            </div>
+        </nav>
+        <div class="row text-white mt-5  flex-column align-items-center">
+            <div class="col-sm-1 col-md-2"></div>
+            <div class="col-sm-10 col-md-8 align-self-center">
+                <div data-role="main" class="ui-content m-5">
+                    <div data-role="fieldcontain">
+                        <label for="email_user">
+                            <h4>帳號</h4>
+                        </label>
+                        <input type="text" name="email_user" id="email_user" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="password">
+                            <h4>密碼</h4>
+                        </label>
+                        <input type="password" name="password" id="password" />
+                    </div>
+                    <div class="ui-grid-a m-5" data-type="vertical">
+                        <div class="ui-block-a">
+                            <a href="#">
+                                <button onclick="chang()" class="bg-primary box text-light" style=" border-radius: 20px;
+                                border: 5px solid #fff;">取消</button>
+                            </a>
+                        </div>
+                        <div class="ui-block-b">
+                            <a href="#" id="login_ok_btn">
+                                <button class="bg-primary box text-light" style=" border-radius: 20px;
+                                border: 5px solid #fff;">確認</button>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Google帳號登入按鈕 上網申請client_id-->
+                </div>
+                <div class="container">
+                    <div class="row flex-column align-items-center">
+                        <div class="col-sm-6 col-md-6 align-self-center">
+                            <div id="g_id_onload"
+                                data-client_id="66115541244-d59lv3vehjjhvhupblrc16glr93fmf22.apps.googleusercontent.com"
+                                data-login_uri="https://your.domain/your_login_endpoint" data-auto_prompt="false"
+                                data-callback="handleCredentialResponse">
+                            </div>
+                            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"
+                                data-text="sign_in_with" data-shape="pill" data-width="400" data-logo_alignment="left"
+                                id="google_btn">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 align-self-center mt-3">
+                            <!-- Facebook帳號登入按鈕 上Meta for Developer 設計按鈕樣式-->
+                            <div class="fb-login-button" data-width="400" data-size="large"
+                                data-button-type="login_with" data-layout="rounded" data-auto-logout-link="false"
+                                data-use-continue-as="false" scope="public_profile,email" onlogin="checkLoginState();">
+                            </div>
+                            <div id="status">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-1 col-md-2"></div>
+        </div>
+    </div>
+    <div data-role="page" id="next_level" class="my-page" style="background-color: #002;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand text-white" type="button" onclick="chang()">Funmovie</a>
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button> -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- <form class="form-inline my-2 my-lg-0">
+        </form> -->
+                <!-- <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">首頁 <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">關於我們</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">產品介紹</a>
+          </li>
+        </ul> -->
+            </div>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-sm-1 col-md-3"></div>
+            <div class="col-sm-10 col-md-6">
+                <div class="container text-light" style="background-color: #002;">
+                    <div role="main" class="ui-content">
+                        <h1 class="display-2 text-center text-white pay ">訂購方案</h1>
+                        <table class="table text-white subpay">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>一般會員</th>
+                                    <th>黃金會員</th>
+                                    <th>鑽石會員</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
+                                <tr>
+                                    <td>解析度</td>
+                                    <td>720P</td>
+                                    <td>1080P</td>
+                                    <td>4K</td>
+                                </tr>
+                                <tr>
+                                    <td>成員數</td>
+                                    <td>X</td>
+                                    <td>2</td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td>月費</td>
+                                    <td>199</td>
+                                    <td>299</td>
+                                    <td>399</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div data-role="fieldcontain">
+                                            <fieldset data-role="controlgroup" data-type="horizontal">
+                                                <input type="radio" name="level" value="0" id="level0">
+                                                <label for="level">選定</label>
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div data-role="fieldcontain">
+                                            <fieldset data-role="controlgroup" data-type="horizontal">
+                                                <input type="radio" name="level" value="1" id="level1">
+                                                <label for="level">選定</label>
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div data-role="fieldcontain">
+                                            <fieldset data-role="controlgroup" data-type="horizontal">
+                                                <input type="radio" name="level" value="2" id="level2">
+                                                <label for="level">選定</label>
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <a href="#pay"><button class="bg-primary box text-light" style=" border-radius: 20px;
+                        border: 5px solid #fff;">Next</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1 col-md-3"></div>
+        </div>
+    </div>
+    <div data-role="page" id="pay" class="my-page" style="background-color: #002;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand text-white" type="button" onclick="chang()">Funmovie</a>
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button> -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- <form class="form-inline my-2 my-lg-0">
+            </form> -->
+                <!-- <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">首頁 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">關於我們</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">產品介紹</a>
+              </li>
+            </ul> -->
+            </div>
+        </nav>
+        <div class="container visa">
+            <div class="row">
+                <div class="col-lg-6 h-100">
+                    <div class="card  text-light" style="background-color: #002;">
+                        <img src="https://blog.tripplus.cc/wp-content/uploads/2020/03/photo.php_.jpeg"
+                            class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">信用卡支付</h5>
+                            <a href="#creditcard" id="credit_pay">
+                                <button class="bg-primary box text-light fixed-bottom" style=" border-radius: 20px;
+                        border: 5px solid #fff;">確定</button>
+                            </a>
+                            <!--   <button id="next_page1" class="bg-primary box text-light" style=" border-radius: 20px;
+                    border: 5px solid #fff;">Next</button> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 h-100">
+                    <div class="card  text-light" style="background-color: #002;">
+                        <img src="https://sw.cool3c.com/user/97626/2018/096c0cc8-4cce-4b0b-9c46-38b1741b9814.jpg?fit=max&w=1400&q=80"
+                            alt="...">
+                        <div class="card-body m-3">
+                            <h5 class="card-title text-center m-4">行動支付</h5>
+                            <a href="#phone_pay" id="mobile_pay">
+                                <button class="bg-primary box text-light fixed-bottom" style=" border-radius: 20px;
+                        border: 5px solid #fff;">確定</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 信用卡支付-->
+    <div data-role="page" id="creditcard" class="my-page" style="background-color: #002;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand text-white" type="button" onclick="chang()">Funmovie</a>
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button> -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- <form class="form-inline my-2 my-lg-0">
+            </form> -->
+                <!-- <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">首頁 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">關於我們</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">產品介紹</a>
+              </li>
+            </ul> -->
+            </div>
+        </nav>
+        <div class="row text-light">
+            <div class="col-sm-1 col-md-3"></div>
+            <div class="col-sm-10 col-md-6">
+                <div role="main" class="ui-content">
+                    <div data-role="fieldcontain">
+                        <label for="how_pay">姓</label>
+                        <input type="text" name="how_pay" id="how_pay" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="how_pay">名</label>
+                        <input type="text" name="how_pay" id="how_pay" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="how_pay">卡號</label>
+                        <input type="text" name="how_pay" id="how_pay" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="how_pay">到期日</label>
+                        <input type="text" name="how_pay" id="how_pay" />
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="how_pay">安全碼</label>
+                        <input type="text" name="how_pay" id="how_pay" />
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <a href="#pay" id="cancel" align="center">
+                            <button id="next_page1" class="bg-primary box text-light" style=" border-radius: 20px;
+                            border: 5px solid #fff;">返回</button>
+                        </a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="" id="reg_ok_btn" align="center">
+                            <button id="next_page1" class="bg-primary box text-light" style=" border-radius: 20px;
+                            border: 5px solid #fff;">確定</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1 col-md-3"></div>
+        </div>
+    </div>
+    <!-- 行動支付-->
+    <div data-role="page" id="phone_pay" class="my-page" style="background-color: #002;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand text-white" type="button" onclick="chang()">Funmovie</a>
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button> -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- <form class="form-inline my-2 my-lg-0">
+            </form> -->
+                <!-- <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">首頁 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">關於我們</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">產品介紹</a>
+              </li>
+            </ul> -->
+            </div>
+        </nav>
+        <div class="row">
+            <div class="col-sm-1 col-md-3"></div>
+            <div class="col-sm-10 col-md-6 text-light">
+                <div role="main" class="ui-content">
+                    <div data-role="fieldcontain">
+                        <label for="phone_go">
+                            <h3>手機號碼</h1>
+                        </label>
+                        <input type="number" name="phone_go" id="phone_go" />
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <a href="#pay" id="cancel" align="center">
+                            <button id="next_page1" class="bg-primary box text-light " style=" border-radius: 20px;
+                            border: 5px solid #fff;">返回</button>
+                        </a>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="" id="reg_ok_btn" align="center">
+                            <button id="next_page1" class="bg-primary box text-light " style=" border-radius: 20px;
+                            border: 5px solid #fff;">確定</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1 col-md-3"></div>
+        </div>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="js/jwt-decode.js"></script>
+    <script>
+        // ajax 連 api 確認帳密
+        $(function () {
+            $("#login_ok_btn").bind("click", function () {
+
+                jsonData["email_user"] = $("#email_user").val();
+                if ($("#password").val() == undefined) {
+                    jsonData["password"] = "0";
+                } else {
+                    jsonData["password"] = $("#password").val();
+                }
+                console.log(JSON.stringify(jsonData));
+                $.ajax({
+                    type: "POST",
+                    url: "member_login_api.php",
+                    data: JSON.stringify(jsonData),
+                    dataType: "json",
+                    success: showdata,
+                    error: function () {
+                        alert("error-movie_member_login_api.php");
+                    }
+                });
+            });
+        });
+        function showdata(data) {
+            console.log(data);
+            if (data.state) {
+                // alert(data.message);
+                setCookie("UID", data.UID, 7);
+                location.href = "user_select.html";
+            } else {
+                alert(data.message);
+            }
+        }
+        function chang() {
+            location.href = "startpage.html";
+        }
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+    </script>
+</body>
+
+</html>
